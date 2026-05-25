@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sesiones Orientativas IV – SEDPEM</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── CÁPSULA DE VIDEOS (index) ─────────────────────── */
+    .video-index-section {
+      background: #111827;
+      border-radius: 18px;
+      overflow: hidden;
+      margin: 0 0 60px 0;
+      box-shadow: 0 8px 40px rgba(13,27,62,0.22);
+    }
+
+    .video-index-header {
+      padding: 22px 28px 16px;
+      border-bottom: 1px solid rgba(44,111,173,0.2);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .video-index-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      flex: 1;
+    }
+
+    .video-index-subtitle {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .video-index-badge {
+      background: rgba(44,111,173,0.2);
+      border: 1px solid rgba(91,130,176,0.4);
+      color: #93c5fd;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      letter-spacing: 0.05em;
+    }
+
+    .video-index-progress {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 28px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .video-index-progress .progress-label { font-size: 12px; color: #5b82b0; font-weight: 500; }
+
+    .video-index-layout {
+      display: flex;
+      min-height: 520px;
+    }
+
+    .video-index-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #000;
+    }
+
+    .video-index-embed {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #000;
+    }
+
+    .video-index-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+    .video-index-embed .video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #111827 0%, #1e3a5f 100%);
+      color: #fff;
+      gap: 14px;
+      cursor: pointer;
+    }
+
+    .video-index-embed .video-placeholder-icon {
+      width: 80px; height: 80px;
+      background: rgba(164,53,240,0.25);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 34px;
+      transition: background 0.2s, transform 0.2s;
+      border: 2px solid rgba(164,53,240,0.4);
+    }
+
+    .video-index-embed .video-placeholder:hover .video-placeholder-icon {
+      background: rgba(164,53,240,0.45);
+      transform: scale(1.08);
+    }
+
+    .video-index-embed .video-placeholder-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .video-index-embed .video-placeholder-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+    }
+
+    .video-index-infobar {
+      background: #1a2535;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .video-index-sidebar {
+      width: 320px;
+      background: #1a2535;
+      border-left: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-group-label {
+      padding: 12px 14px 6px;
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    @media (max-width: 768px) {
+      .video-index-layout { flex-direction: column; }
+      .video-index-sidebar { width: 100%; border-left: none; border-top: 1px solid rgba(255,255,255,0.08); }
+      .sidebar-list { max-height: 220px; }
+    }
+
+    /* ── BOTÓN AMPLIAR ─────────────────────────────────── */
+    .btn-expand {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(91,130,176,0.15);
+      border: 1px solid rgba(91,130,176,0.35);
+      color: #93c5fd;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 13px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+      letter-spacing: 0.03em;
+    }
+    .btn-expand:hover {
+      background: rgba(91,130,176,0.28);
+      border-color: rgba(91,130,176,0.6);
+    }
+    .btn-expand svg { flex-shrink: 0; }
+
+    /* ── MODAL LIGHTBOX ────────────────────────────────── */
+    #video-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,0.88);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    #video-modal.open { display: flex; }
+    #video-modal .modal-inner {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.7);
+    }
+    #video-modal .modal-ratio {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+    }
+    #video-modal iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+    #video-modal .modal-close {
+      position: absolute;
+      top: -38px;
+      right: 0;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 28px;
+      cursor: pointer;
+      line-height: 1;
+      opacity: 0.75;
+      transition: opacity 0.2s;
+    }
+    #video-modal .modal-close:hover { opacity: 1; }
+
+    /* ── CARRUSEL ──────────────────────────────────────── */
+    .carousel-wrapper {
+      position: relative;
+      margin: 0 0 60px;
+    }
+    .carousel-overflow {
+      overflow: hidden;
+      border-radius: 18px;
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .carousel-slide {
+      min-width: 100%;
+      display: flex;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 6px 32px rgba(13,27,62,0.18);
+    }
+
+    .slide-header {
+      width: 260px;
+      min-width: 260px;
+      padding: 30px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      color: #1a2a3a;
+      background: #c3d6ede3;
+      border-right: 1px solid #052649;
+      position: relative;
+    }
+
+    .slide-header::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: var(--slide-accent, #013361);
+      border-radius: 0;
+    }
+
+    .slide-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(44,111,173,0.12);
+      border: 1px solid rgba(44,111,173,0.25);
+      border-radius: 999px;
+      padding: 4px 12px;
+      display: inline-block;
+      align-self: flex-start;
+      color: #1e3a5f;
+    }
+
+    .slide-icon { font-size: 44px; margin: 8px 0 4px; }
+
+    .slide-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: #1a2a3a;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .slide-subtitle {
+      font-size: 11.5px;
+      color: #03254b;
+      margin: 0;
+      letter-spacing: 0.03em;
+    }
+
+    .slide-body {
+      flex: 1;
+      background: #1a2535;
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .slide-intro {
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .slide-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .slide-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.5;
+    }
+
+    .slide-list li strong { color: #fff; font-weight: 600; }
+
+    .sl-dot {
+      width: 8px;
+      height: 8px;
+      min-width: 8px;
+      border-radius: 50%;
+      margin-top: 5px;
+    }
+
+    .slide-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .tool-chip {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid;
+      letter-spacing: 0.04em;
+    }
+
+    .carousel-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .carousel-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid #1a2a3a;
+      background: #fff;
+      color: #1a2a3a;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.15s, color 0.2s;
+      line-height: 1;
+      box-shadow: 0 1px 4px rgba(26,42,58,0.15);
+    }
+
+    .carousel-btn:hover { background: #1a2a3a; color: #fff; }
+    .carousel-btn:active { transform: scale(0.92); }
+    .carousel-btn:disabled { opacity: 0.22; cursor: default; pointer-events: none; }
+
+    .carousel-dots { display: flex; gap: 8px; align-items: center; }
+
+    .cdot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: transparent;
+      border: 2px solid rgba(26,42,58,0.3);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s, border-color 0.2s;
+    }
+
+    .cdot.active {
+      background: #1a2a3a;
+      border-color: #1a2a3a;
+      transform: scale(1.3);
+    }
+
+    .cdot:hover:not(.active) { border-color: #1a2a3a; }
+
+    @media (max-width: 768px) {
+      .carousel-slide { flex-direction: column; }
+      .slide-header { width: 100%; min-width: unset; padding: 24px 22px; }
+      .slide-body { padding: 22px; }
+    }
+
+    /* ── HERO overrides (portada estilo formulario) ─── */
+    .hero {
+      background: #1a3564;
+      min-height: 580px;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .hero-grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 52px 52px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-logos-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      padding: 22px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      z-index: 3;
+      flex-wrap: wrap;
+    }
+
+    .hero-logos-divider {
+      width: 1px;
+      height: 44px;
+      background: rgba(255,255,255,0.18);
+      flex-shrink: 0;
+    }
+
+    .hero-logo-img {
+      height: 96px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 1px 6px rgba(0,0,0,0.3));
+      opacity: 0.95;
+    }
+
+    .hero-logo-seminario { height: 104px; }
+
+    .hero-bg-numeral {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -44%);
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(200px, 30vw, 340px);
+      font-weight: 700;
+      color: rgba(255,255,255,0.045);
+      user-select: none;
+      pointer-events: none;
+      z-index: 2;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 140px 40px 68px;
+      text-align: center;
+    }
+
+    .hero-supertitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 10px;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 5vw, 58px);
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.13;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: rgba(200,218,240,0.72);
+    }
+
+    .hero-subtitle-line {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.78;
+      max-width: 560px;
+      margin: 0 auto 34px;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 36px;
+      flex-wrap: wrap;
+    }
+
+    .hero-stat { text-align: center; }
+
+    .hero-stat strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: #c9a227;
+    }
+
+    .hero-stat span {
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.42);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* hero-badge ya no se usa, pero lo dejamos neutral */
+    .hero-badge { display: none; }
+    .hero-desc  { display: none; }
+
+    .hero-logo-img {
+      transition: opacity .1s, transform .1s, filter .1s;
+      cursor: pointer;
+    }
+    .hero-logo-img:hover {
+      opacity: 1 !important;
+      transform: scale(1.12) translateY(-3px);
+      filter: drop-shadow(0 4px 18px rgba(255,255,255,0.4)) brightness(1.2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo">SO</a>
+      <a href="index.html" class="header-title">
+        Sesiones Orientativas IV
+        <span>SEDPEM · Curso</span>
+      </a>
+      <nav class="header-nav">
+        <a href="#videos">Videos</a>
+        <a href="#modulos">Módulos</a>
+        <a href="modulos/modulo-01.html">Iniciar</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO PORTADA -->
+  <section class="hero">
+    <div class="hero-grid-overlay"></div>
+    <div class="hero-logos-bar">
+      <img src="logo_ubb.png"       alt="Universidad del Bío-Bío" class="hero-logo-img">
+      <div class="hero-logos-divider"></div>
+      <img src="logo_seminario.png" alt="SEDPEM"                  class="hero-logo-img hero-logo-seminario">
+      <div class="hero-logos-divider"></div>
+      <img src="logo_cmm.png"       alt="CMM 25 años"             class="hero-logo-img">
+    </div>
+    <div class="hero-bg-numeral">IV</div>
+    <div class="hero-content">
+      <p class="hero-supertitle">Sesiones Orientativas</p>
+      <h1>Recursos, Planificación<br><em>y Tecnología</em></h1>
+      <p class="hero-subtitle-line">Curso de formación para docentes orientado al diseño, creación e implementación de recursos educativos digitales e impresos de alta calidad.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong>3</strong><span>Módulos</span></div>
+        <div class="hero-stat"><strong>7+</strong><span>Cápsulas</span></div>
+        <div class="hero-stat"><strong>Libre</strong><span>Acceso</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARRUSEL DE MÓDULOS -->
+  <section class="modulos-section" id="resumen-curso" style="padding-bottom: 0;">
+    <p class="section-label">Estructura del cursillo</p>
+    <h2 class="section-titulo">¿Qué verás en cada módulo?</h2>
+
+    <div class="carousel-wrapper">
+    <div class="carousel-overflow">
+      <div class="carousel-track" id="carousel-track">
+
+        <!-- SLIDE 0: Bienvenida -->
+        <div class="carousel-slide" data-mod="intro">
+          <div class="slide-header" style="--slide-accent:#2c6fad;">
+            <div class="slide-badge">Antes de comenzar</div>
+            <div class="slide-icon">🎬</div>
+            <h3 class="slide-title">Bienvenida al cursillo</h3>
+            <p class="slide-subtitle">Asincrónico · Libre acceso · 3 módulos</p>
+          </div>
+          <div class="slide-body">
+            <p class="slide-intro">Este cursillo asincrónico fue diseñado para que las y los docentes de EDO puedan crear recursos educativos digitales e impresos de alta calidad usando herramientas modernas.</p>
+            <ul class="slide-list">
+              <li><span class="sl-dot" style="background:#2c6fad;"></span>Videos grabados y disponibles en cualquier momento</li>
+              <li><span class="sl-dot" style="background:#2c6fad;"></span>Tres módulos progresivos con objetivos claros</li>
+              <li><span class="sl-dot" style="background:#2c6fad;"></span>Posible módulo 04 de cierre con formulario de reflexión</li>
+            </ul>
+            <div class="slide-tools">
+              <span class="tool-chip" style="background:rgba(44,111,173,0.1);color:#ffffff;border-color:rgba(44,111,173,0.3);">Claude AI</span>
+              <span class="tool-chip" style="background:rgba(44,111,173,0.1);color:#ffffff;border-color:rgba(44,111,173,0.3);">VS Code</span>
+              <span class="tool-chip" style="background:rgba(44,111,173,0.1);color:#ffffff;border-color:rgba(44,111,173,0.3);">LaTeX</span>
+              <span class="tool-chip" style="background:rgba(44,111,173,0.1);color:#ffffff;border-color:rgba(44,111,173,0.3);">Python</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 1: Módulo 01 -->
+        <div class="carousel-slide" data-mod="01">
+          <div class="slide-header" style="--slide-accent:#052039;">
+            <div class="slide-badge">Módulo 01</div>
+            <div class="slide-icon">📂</div>
+            <h3 class="slide-title">Introducción y configuración</h3>
+            <p class="slide-subtitle">Diagnóstico · Herramientas · Repaso SO I</p>
+          </div>
+          <div class="slide-body">
+            <p class="slide-intro">Arrancamos con la presentación del cursillo, las observaciones importantes y dejamos todo listo en tu computador.</p>
+            <ul class="slide-list">
+              <li><span class="sl-dot" style="background:#2c6fad;"></span><strong>Intro del cursillo</strong> — objetivos, metodología y observaciones clave</li>
+              <li><span class="sl-dot" style="background:#2c6fad;"></span><strong>Instalaciones</strong> — descarga e instalación de Claude, VS Code y Python para Windows</li>
+              <li><span class="sl-dot" style="background:#2c6fad;"></span><strong>Repaso</strong> — consolidamos lo visto en la primera Sesión Orientativa</li>
+            </ul>
+            <div class="slide-tools">
+              <span class="tool-chip" style="background:rgba(44,111,173,0.1);color:#ffffff;border-color:rgba(44,111,173,0.3);">Claude AI</span>
+              <span class="tool-chip" style="background:rgba(44,111,173,0.1);color:#ffffff;border-color:rgba(44,111,173,0.3);">VS Code</span>
+              <span class="tool-chip" style="background:rgba(44,111,173,0.1);color:#ffffff;border-color:rgba(44,111,173,0.3);">Python</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 2: Módulo 02 -->
+        <div class="carousel-slide" data-mod="02">
+          <div class="slide-header" style="--slide-accent:#1a8a72;">
+            <div class="slide-badge">Módulo 02</div>
+            <div class="slide-icon">📄</div>
+            <h3 class="slide-title">Planificación del EID en LaTeX</h3>
+            <p class="slide-subtitle">Objetivo Mineduc · Planificación · .tex</p>
+          </div>
+          <div class="slide-body">
+            <p class="slide-intro">Aprenderás a crear una planificación profesional del EID partiendo de los objetivos del Mineduc, usando directamente LaTeX desde cero.</p>
+            <ul class="slide-list">
+              <li><span class="sl-dot" style="background:#1a8a72;"></span><strong>Análisis del objetivo general</strong> del EID y los lineamientos Mineduc para la sesión</li>
+              <li><span class="sl-dot" style="background:#1a8a72;"></span><strong>Planificación en .tex</strong> — ejemplo con modelo de crecimiento poblacional</li>
+              <li><span class="sl-dot" style="background:#1a8a72;"></span><strong>Plantilla propia</strong> — usarás una página elaborada por el profe que entrega la estructura LaTeX lista</li>
+            </ul>
+            <div class="slide-tools">
+              <span class="tool-chip" style="background:rgba(26,138,114,0.1);color:#ffffff;border-color:rgba(26,138,114,0.3);">LaTeX</span>
+              <span class="tool-chip" style="background:rgba(26,138,114,0.1);color:#ffffff;border-color:rgba(26,138,114,0.3);">EID</span>
+              <span class="tool-chip" style="background:rgba(26,138,114,0.1);color:#ffffff;border-color:rgba(26,138,114,0.3);">Mineduc</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 3: Módulo 03 -->
+        <div class="carousel-slide" data-mod="03">
+          <div class="slide-header" style="--slide-accent:#b8860b;">
+            <div class="slide-badge">Módulo 03</div>
+            <div class="slide-icon">💻</div>
+            <h3 class="slide-title">Guías EDO con IA: .tex y HTML pro</h3>
+            <p class="slide-subtitle">Guía · Claude AI · GitHub Pages</p>
+          </div>
+          <div class="slide-body">
+            <p class="slide-intro">El módulo más completo: crearás la guía de trabajo en LaTeX, la transformarás en HTML básico y luego la potenciarás con IA hasta publicarla en la web.</p>
+            <ul class="slide-list">
+              <li><span class="sl-dot" style="background:#b8860b;"></span><strong>Guía en .tex</strong> — estructura y estética básica de LaTeX con apoyo de ChatGPT gratuito</li>
+              <li><span class="sl-dot" style="background:#b8860b;"></span><strong>Export HTML</strong> — desde la misma página del profe se genera el HTML base de la guía</li>
+              <li><span class="sl-dot" style="background:#b8860b;"></span><strong>Prompt .md en Claude</strong> — un prompt muy detallado potencia el HTML básico a una versión pro</li>
+              <li><span class="sl-dot" style="background:#b8860b;"></span><strong>GitHub Pages</strong> — guardas el archivo, lo publicas y obtienes la URL para insertar en el .tex</li>
+            </ul>
+            <div class="slide-tools">
+              <span class="tool-chip" style="background:rgba(184,134,11,0.1);color:#ffffff;border-color:rgba(184,134,11,0.3);">Claude AI</span>
+              <span class="tool-chip" style="background:rgba(184,134,11,0.1);color:#ffffff;border-color:rgba(184,134,11,0.3);">LaTeX</span>
+              <span class="tool-chip" style="background:rgba(184,134,11,0.1);color:#ffffff;border-color:rgba(184,134,11,0.3);">HTML</span>
+              <span class="tool-chip" style="background:rgba(184,134,11,0.1);color:#ffffff;border-color:rgba(184,134,11,0.3);">GitHub Pages</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 4: Módulo 04 -->
+        <div class="carousel-slide" data-mod="04">
+          <div class="slide-header" style="--slide-accent:#b8860b;">
+            <div class="slide-badge" style="background:rgba(255,255,255,0.15);">Módulo 04 · Próximamente</div>
+            <div class="slide-icon">📝</div>
+            <h3 class="slide-title">Formulario de cierre personalizado</h3>
+            <p class="slide-subtitle">Reflexión · Evaluación · Cierre de clase</p>
+          </div>
+          <div class="slide-body">
+            <p class="slide-intro">Módulo opcional en desarrollo: aprenderás a crear un formulario personalizado que tus estudiantes completarán al finalizar la clase del EID.</p>
+            <ul class="slide-list">
+              <li><span class="sl-dot" style="background:#b8860b;"></span><strong>Formulario a medida</strong> — diseñado para que los estudiantes registren qué aprendieron del EID</li>
+              <li><span class="sl-dot" style="background:#b8860b;"></span><strong>Espacio de comentarios</strong> — los estudiantes podrán compartir cómo fue su experiencia de clase</li>
+              <li><span class="sl-dot" style="background:#b8860b;"></span>Herramientas y plataforma por confirmar</li>
+            </ul>
+            <div class="slide-tools">
+              <span class="tool-chip" style="background:rgba(184,134,11,0.1);color:#ffffff;border-color:rgba(184,134,11,0.3);">En desarrollo</span>
+              <span class="tool-chip" style="background:rgba(184,134,11,0.1);color:#ffffff;border-color:rgba(184,134,11,0.3);">Cierre de clase</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /carousel-track -->
+    </div><!-- /carousel-overflow -->
+
+    <!-- Controles fuera del overflow -->
+    <div class="carousel-controls">
+      <button class="carousel-btn" id="btn-prev" onclick="moveCarousel(-1)" aria-label="Anterior">&#8592;</button>
+      <div class="carousel-dots" id="carousel-dots"></div>
+      <button class="carousel-btn" id="btn-next" onclick="moveCarousel(1)" aria-label="Siguiente">&#8594;</button>
+    </div>
+
+  </section>
+
+  <!-- VIDEOS EXPLICATIVOS -->
+  <main class="modulos-section" id="videos" style="padding-bottom: 0;">
+    <p class="section-label">Antes de comenzar</p>
+    <h2 class="section-titulo">Videos explicativos del curso</h2>
+
+    <div class="video-index-section">
+
+      <div class="video-index-header">
+        <div>
+          <div class="video-index-title">🎬 Cápsulas introductorias</div>
+          <div class="video-index-subtitle">Visión general · Metodología · Herramientas</div>
+        </div>
+        <span class="video-index-badge">7 videos</span>
+      </div>
+
+      <div class="video-index-progress">
+        <span class="progress-label">Progreso</span>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="fill-idx" style="width: 0%"></div>
+        </div>
+        <span class="progress-count" id="count-idx">0 / 7</span>
+      </div>
+
+      <div class="video-index-layout">
+
+        <!-- Reproductor principal -->
+        <div class="video-index-main">
+          <div class="video-index-embed">
+            <div class="video-placeholder" id="placeholder-idx" onclick="playIndexVideo(0)">
+              <div class="video-placeholder-icon">▶</div>
+              <div class="video-placeholder-title">Comienza aquí</div>
+              <div class="video-placeholder-sub">Haz clic para reproducir el primer video</div>
+            </div>
+            <iframe id="player-idx" src="" allowfullscreen allow="autoplay; fullscreen" loading="lazy" title="Video introductorio" style="display:none;"></iframe>
+          </div>
+          <div class="video-index-infobar">
+            <span class="video-info-title" id="title-idx">Selecciona un video para comenzar</span>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span class="video-info-meta" id="meta-idx"></span>
+              <button class="btn-expand" id="btn-expand" onclick="openModal()" style="display:none;" title="Ver en pantalla grande">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                Ampliar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar de videos -->
+        <div class="video-index-sidebar">
+          <div class="sidebar-group-label">Módulo 01</div>
+          <div class="sidebar-list" id="list-idx">
+
+            <div class="video-item" onclick="playIndexVideo(0)" data-index="0">
+              <div class="item-check" id="check-idx-0"></div>
+              <div class="item-info">
+                <div class="item-title">Introducción al curso</div>
+                <div class="item-now-playing">▶ Reproduciendo</div>
+                <div class="item-duration">⏱ 11:49</div>
+              </div>
+            </div>
+
+            <div class="video-item" onclick="playIndexVideo(1)" data-index="1">
+              <div class="item-check" id="check-idx-1"></div>
+              <div class="item-info">
+                <div class="item-title">Instalación de Programas</div>
+                <div class="item-now-playing">▶ Reproduciendo</div>
+                <div class="item-duration">⏱ 09:28</div>
+              </div>
+            </div>
+
+            <div class="video-item" onclick="playIndexVideo(2)" data-index="2">
+              <div class="item-check" id="check-idx-2"></div>
+              <div class="item-info">
+                <div class="item-title">Resumen de SO1</div>
+                <div class="item-now-playing">▶ Reproduciendo</div>
+                <div class="item-duration">⏱ 10:16</div>
+              </div>
+            </div>
+
+            <div class="sidebar-group-label" style="margin-top:4px;">Módulo 02</div>
+
+            <div class="video-item" onclick="playIndexVideo(3)" data-index="3">
+              <div class="item-check" id="check-idx-3"></div>
+              <div class="item-info">
+                <div class="item-title">Análisis y Creación de OA</div>
+                <div class="item-now-playing">▶ Reproduciendo</div>
+                <div class="item-duration">⏱ 14:43</div>
+              </div>
+            </div>
+
+            <div class="video-item" onclick="playIndexVideo(4)" data-index="4">
+              <div class="item-check" id="check-idx-4"></div>
+              <div class="item-info">
+                <div class="item-title">Elaboración de Planificación</div>
+                <div class="item-now-playing">▶ Reproduciendo</div>
+                <div class="item-duration">⏱ 48:52</div>
+              </div>
+            </div>
+
+            <div class="sidebar-group-label" style="margin-top:4px;">Módulo 03</div>
+
+            <div class="video-item" onclick="playIndexVideo(5)" data-index="5">
+              <div class="item-check" id="check-idx-5"></div>
+              <div class="item-info">
+                <div class="item-title">Elaboración de guía en LaTeX</div>
+                <div class="item-now-playing">▶ Reproduciendo</div>
+                <div class="item-duration">⏱ 44:42</div>
+              </div>
+            </div>
+
+            <div class="video-item" onclick="playIndexVideo(6)" data-index="6">
+              <div class="item-check" id="check-idx-6"></div>
+              <div class="item-info">
+                <div class="item-title">Elaboración de página HTML</div>
+                <div class="item-now-playing">▶ Reproduciendo</div>
+                <div class="item-duration">⏱ 34:34</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MÓDULOS -->
+  <main class="modulos-section" id="modulos">
+    <p class="section-label">Contenidos del curso</p>
+    <h2 class="section-titulo">Módulos disponibles</h2>
+
+    <div class="modulos-grid">
+
+      <a href="modulos/modulo-01.html" class="modulo-card" style="--card-color:#1e6fd9;--card-bg:#e8f0fe;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="modulo-icon" style="--card-bg:#e8f0fe;">📂</div>
+          <span class="modulo-num">Módulo 01</span>
+        </div>
+        <h3>Análisis de Recursos Educativos Anteriores y Planeación de Actividades</h3>
+        <p class="modulo-desc">Revisión crítica de materiales previos e identificación de áreas de mejora para la planificación efectiva.</p>
+        <span class="modulo-tag">Diagnóstico · Planeación</span>
+        <span class="modulo-arrow">→</span>
+      </a>
+
+      <a href="modulos/modulo-02.html" class="modulo-card" style="--card-color:#0f6e56;--card-bg:#e1f5ee;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="modulo-icon" style="background:#e1f5ee;">📄</div>
+          <span class="modulo-num">Módulo 02</span>
+        </div>
+        <h3>Creación de planificación del EID y recursos educativos en .tex</h3>
+        <p class="modulo-desc">Uso de LaTeX para generar documentos académicos profesionales: planificaciones, guías y materiales de alta calidad tipográfica.</p>
+        <span class="modulo-tag" style="background:#e1f5ee;color:#0f6e56;">LaTeX · EID</span>
+        <span class="modulo-arrow" style="color:#0f6e56;">→</span>
+      </a>
+
+      <a href="modulos/modulo-03.html" class="modulo-card" style="--card-color:#993c1d;--card-bg:#faece7;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="modulo-icon" style="background:#faece7;">💻</div>
+          <span class="modulo-num">Módulo 03</span>
+        </div>
+        <h3>Generación de guías de EDO con IA: .tex y HTML</h3>
+        <p class="modulo-desc">Usa prompts especializados en Claude para producir guías de Ecuaciones Diferenciales Ordinarias en LaTeX y web interactiva.</p>
+        <span class="modulo-tag" style="background:#faece7;color:#993c1d;">EDO · Claude AI · LaTeX</span>
+        <span class="modulo-arrow" style="color:#993c1d;">→</span>
+      </a>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <strong>Sesiones Orientativas IV · SEDPEM</strong> &nbsp;·&nbsp; Curso de formación docente · Acceso libre
+  </footer>
+
+  <!-- MODAL LIGHTBOX -->
+  <div id="video-modal" onclick="closeModalOutside(event)">
+    <div class="modal-inner">
+      <button class="modal-close" onclick="closeModal()" title="Cerrar">✕</button>
+      <div class="modal-ratio">
+        <iframe id="modal-player" src="" allowfullscreen allow="autoplay; fullscreen"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const indexVideos = [
+      { id: 'JniFHW1tF-E', title: 'Introducción al curso',         duration: '11:49' },
+      { id: 'JF8E3cqf3sE', title: 'Instalación de Programas',      duration: '09:28' },
+      { id: 'ERbNBIWKkyA', title: 'Resumen de SO1',                 duration: '10:16' },
+      { id: '_qHDtHz2JEI', title: 'Análisis y Creación de OA',      duration: '14:43' },
+      { id: '1BMY_ncpkQI', title: 'Elaboración de Planificación',   duration: '48:52' },
+      { id: 'WoL3wBPfWrM', title: 'Elaboración de guía en LaTeX',   duration: '44:42' },
+      { id: 'Hee_c6CuVTw', title: 'Elaboración de página HTML',     duration: '34:34' },
+    ];
+
+    const watchedIdx = new Set();
+
+    function playIndexVideo(index) {
+      const v = indexVideos[index];
+      const placeholder = document.getElementById('placeholder-idx');
+      const player      = document.getElementById('player-idx');
+      placeholder.style.display = 'none';
+      player.style.display      = 'block';
+      player.src = 'https://www.youtube.com/embed/' + v.id + '?autoplay=1&rel=0&fs=1';
+
+      document.getElementById('title-idx').textContent = v.title;
+      document.getElementById('meta-idx').textContent  = v.duration;
+
+      // Mostrar botón ampliar
+      const btnExpand = document.getElementById('btn-expand');
+      btnExpand.style.display = 'inline-flex';
+      btnExpand.dataset.videoId = v.id;
+
+      document.querySelectorAll('#list-idx .video-item').forEach((item, i) => {
+        item.classList.toggle('active', i === index);
+      });
+
+      watchedIdx.add(index);
+      const total = indexVideos.length;
+      const done  = watchedIdx.size;
+      document.getElementById('fill-idx').style.width   = Math.round((done/total)*100) + '%';
+      document.getElementById('count-idx').textContent  = done + ' / ' + total;
+
+      watchedIdx.forEach(i => {
+        const check = document.getElementById('check-idx-' + i);
+        if (check) {
+          check.style.background  = '#5624d0';
+          check.style.borderColor = '#5624d0';
+          check.textContent       = '✓';
+          check.closest('.video-item').classList.add('completed');
+        }
+      });
+    }
+
+    function openModal() {
+      const videoId = document.getElementById('btn-expand').dataset.videoId;
+      if (!videoId) return;
+      document.getElementById('modal-player').src =
+        'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&fs=1';
+      document.getElementById('video-modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('video-modal').classList.remove('open');
+      document.getElementById('modal-player').src = '';
+      document.body.style.overflow = '';
+    }
+
+    function closeModalOutside(e) {
+      if (e.target === document.getElementById('video-modal')) closeModal();
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+
+  <script>
+    /* ── CARRUSEL ── */
+    const track   = document.getElementById('carousel-track');
+    const dotsBox = document.getElementById('carousel-dots');
+    const slides  = track.querySelectorAll('.carousel-slide');
+    const total   = slides.length;
+    let current   = 0;
+
+    slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'cdot' + (i === 0 ? ' active' : '');
+      d.onclick   = () => goTo(i);
+      dotsBox.appendChild(d);
+    });
+
+    function goTo(n) {
+      current = Math.max(0, Math.min(n, total - 1));
+      track.style.transform = 'translateX(-' + current * 100 + '%)';
+      dotsBox.querySelectorAll('.cdot').forEach((d, i) => d.classList.toggle('active', i === current));
+      document.getElementById('btn-prev').disabled = current === 0;
+      document.getElementById('btn-next').disabled = current === total - 1;
+    }
+
+    function moveCarousel(dir) { goTo(current + dir); }
+
+    goTo(0);
+  </script>
+
+</body>
+</html>
