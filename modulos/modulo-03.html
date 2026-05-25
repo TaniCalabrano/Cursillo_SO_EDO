@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 03 – Sesiones Orientativas IV SEDPEM</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+
+    /* ── TIMELINE ───────────────────────────────────────── */
+    .timeline {
+      position: relative;
+      padding: 0 0 0 52px;
+      margin: 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 19px; top: 0; bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .tl-step {
+      position: relative;
+      margin-bottom: 28px;
+    }
+    .tl-step:last-child { margin-bottom: 0; }
+
+    .tl-dot {
+      position: absolute;
+      left: -39px; top: 2px;
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      z-index: 1;
+    }
+
+    .tl-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .tl-card-header {
+      padding: 12px 18px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      justify-content: space-between;
+      gap: 10px; flex-wrap: wrap;
+    }
+
+    .tl-card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px; font-weight: 700;
+      color: var(--navy);
+    }
+
+    .tl-badge {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text2);
+      padding: 3px 10px; border-radius: 999px;
+    }
+
+    .tl-card-body {
+      padding: 16px 18px;
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .tl-card-body p { margin-bottom: 8px; }
+    .tl-card-body p:last-child { margin-bottom: 0; }
+    .tl-card-body strong { color: var(--text); font-weight: 600; }
+    .tl-card-body a { color: var(--accent); }
+
+    /* ── ALERTAS ─────────────────────────────────────────── */
+    .alerta {
+      border-radius: 10px;
+      padding: 13px 16px;
+      font-size: 13.5px;
+      line-height: 1.65;
+      margin-bottom: 14px;
+      display: flex; gap: 11px; align-items: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text2);
+    }
+    .alerta-icon { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+    .alerta strong { color: var(--text); font-weight: 600; }
+
+    /* ── EMBED FRAME ─────────────────────────────────────── */
+    .embed-wrapper {
+      background: var(--navy);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .embed-bar {
+      background: var(--navy);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 9px 14px;
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    }
+
+    .embed-bar-title {
+      font-size: 12px; font-weight: 600;
+      color: rgba(255,255,255,0.6);
+      display: flex; align-items: center; gap: 7px;
+    }
+
+    .dot { width:9px; height:9px; border-radius:50%; }
+    .dot-red    { background:#ff5f57; }
+    .dot-yellow { background:#ffbd2e; }
+    .dot-green  { background:#28c840; }
+
+    .embed-open-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 11px; font-weight: 600;
+      padding: 5px 13px; border-radius: 7px;
+      cursor: pointer; text-decoration: none;
+      transition: background .18s;
+    }
+    .embed-open-btn:hover { background: rgba(255,255,255,0.2); }
+
+    .embed-frame {
+      width: 100%; height: 640px;
+      border: none; display: block; background: #fff;
+    }
+
+    /* ── DOWNLOAD CARD ───────────────────────────────────── */
+    .download-card {
+      background: var(--navy);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 20px 22px;
+      display: flex; align-items: center;
+      gap: 18px; margin-bottom: 14px; flex-wrap: wrap;
+    }
+
+    .download-icon-wrap {
+      width: 52px; height: 52px; min-width: 52px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+    }
+
+    .download-info { flex: 1; }
+
+    .download-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px; font-weight: 700;
+      color: #fff; margin-bottom: 3px;
+    }
+
+    .download-desc {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.5;
+    }
+
+    .download-btn {
+      background: #fff;
+      color: var(--navy);
+      border: none;
+      padding: 10px 20px; border-radius: 9px;
+      font-size: 13px; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: opacity .18s, transform .15s;
+      white-space: nowrap;
+      font-family: 'Inter', sans-serif;
+    }
+    .download-btn:hover { opacity: .88; transform: translateY(-1px); }
+
+    /* ── STEPS CARD (overleaf / github) ──────────────────── */
+    .steps-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .steps-card-header {
+      background: var(--navy);
+      padding: 13px 18px;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .steps-label {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      font-weight: 800; font-size: 11px;
+      padding: 3px 9px; border-radius: 5px;
+      font-family: 'Syne', sans-serif;
+      letter-spacing: .04em;
+    }
+
+    .steps-card-title {
+      font-size: 13px; font-weight: 600; color: #fff;
+    }
+
+    .steps-card-body { padding: 18px 20px; }
+
+    .steps-list {
+      list-style: none; padding: 0; margin: 0;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+
+    .steps-list li {
+      display: flex; gap: 12px; align-items: flex-start;
+      font-size: 13.5px; color: var(--text2); line-height: 1.6;
+    }
+
+    .step-num {
+      min-width: 24px; height: 24px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+      color: var(--navy); flex-shrink: 0; margin-top: 1px;
+    }
+
+    .steps-list strong { color: var(--text); }
+    .steps-list code {
+      background: var(--surface2);
+      padding: 1px 6px; border-radius: 4px;
+      font-size: 12px; font-family: 'Courier New', monospace;
+      color: var(--text);
+    }
+    .steps-list a { color: var(--accent); }
+
+    /* ── FEATURE GRID ────────────────────────────────────── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .feature-card-icon { font-size: 20px; margin-bottom: 8px; }
+
+    .feature-card-title {
+      font-size: 13px; font-weight: 600;
+      color: var(--navy); margin-bottom: 4px;
+    }
+
+    .feature-card-desc {
+      font-size: 12px; color: var(--text2); line-height: 1.55;
+    }
+
+    /* ── ENTREGABLES GRID ────────────────────────────────── */
+    .entregables-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .entregable-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--navy);
+      border-radius: 12px;
+      padding: 18px;
+    }
+
+    .entregable-icon { font-size: 22px; margin-bottom: 8px; }
+
+    .entregable-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px; font-weight: 700;
+      color: var(--navy); margin-bottom: 6px;
+    }
+
+    .entregable-desc {
+      font-size: 13px; color: var(--text2); line-height: 1.6;
+    }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+
+    .tag {
+      font-size: 10.5px; font-weight: 600;
+      padding: 3px 10px; border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text2);
+      letter-spacing: .03em;
+    }
+
+    /* ── CODE BLOCK ──────────────────────────────────────── */
+    .code-block {
+      background: var(--navy);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .code-bar {
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      padding: 7px 14px;
+      font-size: 10.5px;
+      color: rgba(255,255,255,0.4);
+      font-family: 'Courier New', monospace;
+    }
+
+    .code-content {
+      padding: 14px 16px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12.5px; line-height: 1.8;
+      color: rgba(255,255,255,0.85);
+      white-space: pre-wrap; word-break: break-word;
+    }
+
+    @media (max-width: 640px) {
+      .entregables-grid { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="../index.html" class="header-logo">SO</a>
+      <a href="../index.html" class="header-title">
+        Sesiones Orientativas IV
+        <span>SEDPEM · Curso</span>
+      </a>
+      <nav class="header-nav">
+        <a href="../index.html">← Todos los módulos</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="modulo-hero">
+    <div class="modulo-hero-inner">
+      <div class="breadcrumb">
+        <a href="../index.html">Inicio</a>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-current">Módulo 03</span>
+      </div>
+      <div class="modulo-hero-num">Módulo 03 · LaTeX · HTML · Claude AI · GitHub Pages</div>
+      <h1>Creación del recurso didáctico: Guía .tex y complemento digital HTML</h1>
+      <p>Aprenderás a crear la guía de trabajo en LaTeX usando la herramienta del profe, exportarla como HTML básico y transformarla en una versión profesional con Claude. Finalmente la publicarás en GitHub Pages.</p>
+    </div>
+  </section>
+
+  <div class="capsulas-container">
+
+    <!-- ── CÁPSULA 1: RESUMEN DEL FLUJO ── -->
+    <article class="capsula">
+      <div class="capsula-header">
+        <div class="capsula-num">1</div>
+        <div class="capsula-titulo">Resumen del flujo de trabajo</div>
+      </div>
+      <div class="capsula-body">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🎯</div> ¿Qué crearás en este módulo?</div>
+          <p>Al finalizar habrás producido <strong>dos entregables complementarios</strong> para tu EID:</p>
+        </div>
+
+        <div class="entregables-grid">
+          <div class="entregable-card">
+            <div class="entregable-icon">📄</div>
+            <div class="entregable-title">Guía en LaTeX (.tex)</div>
+            <p class="entregable-desc">Documento imprimible de alta calidad tipográfica. Se compila en Overleaf con logos institucionales y produce un PDF listo para imprimir o compartir.</p>
+            <div class="tag-row">
+              <span class="tag">LaTeX</span>
+              <span class="tag">Overleaf</span>
+              <span class="tag">PDF</span>
+            </div>
+          </div>
+          <div class="entregable-card">
+            <div class="entregable-icon">🌐</div>
+            <div class="entregable-title">Guía digital HTML (pro)</div>
+            <p class="entregable-desc">Versión web interactiva con modo Docente y Estudiante, ecuaciones con MathJax, gráficos y formulario de cierre. Se publica en GitHub Pages.</p>
+            <div class="tag-row">
+              <span class="tag">HTML</span>
+              <span class="tag">Claude AI</span>
+              <span class="tag">GitHub Pages</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🗺️</div> Pasos del módulo</div>
+        </div>
+
+        <div class="timeline">
+
+          <div class="tl-step">
+            <div class="tl-dot">🔧</div>
+            <div class="tl-card">
+              <div class="tl-card-header">
+                <div class="tl-card-title">Paso 1 · Generador de guías</div>
+                <span class="tl-badge">Herramienta propia</span>
+              </div>
+              <div class="tl-card-body">
+                <p>Usas la herramienta <strong>Generador de Guías</strong> (incluida en este módulo) para completar el formulario con los datos de tu guía. Desde ahí obtienes el <strong>código .tex</strong> y el <strong>HTML básico</strong>.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-step">
+            <div class="tl-dot">☁️</div>
+            <div class="tl-card">
+              <div class="tl-card-header">
+                <div class="tl-card-title">Paso 2 · Compilar en Overleaf con logos</div>
+                <span class="tl-badge">Overleaf PRO</span>
+              </div>
+              <div class="tl-card-body">
+                <p><strong>No subas los logos directamente.</strong> El profe compartirá a cada grupo un proyecto Overleaf con funciones PRO que ya tiene la estructura lista, las imágenes institucionales precargadas y el preámbulo correcto.</p>
+                <p>Tu tarea: <strong>pegar el código .tex generado</strong> en ese proyecto, reemplazar solo el preámbulo y compilar.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-step">
+            <div class="tl-dot">🤖</div>
+            <div class="tl-card">
+              <div class="tl-card-header">
+                <div class="tl-card-title">Paso 3 · Transformar HTML básico → HTML pro con Claude</div>
+                <span class="tl-badge">Claude AI</span>
+              </div>
+              <div class="tl-card-body">
+                <p>Tomas el HTML básico y se lo entregas a Claude junto con el <strong>prompt .md</strong> descargable en este módulo. Claude transformará el HTML en una versión profesional con modo Docente/Estudiante, MathJax y exportación de respuestas.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-step">
+            <div class="tl-dot">🚀</div>
+            <div class="tl-card">
+              <div class="tl-card-header">
+                <div class="tl-card-title">Paso 4 · Publicar en GitHub Pages e insertar URL</div>
+                <span class="tl-badge">GitHub Pages</span>
+              </div>
+              <div class="tl-card-body">
+                <p>Subes el HTML pro a GitHub, activas GitHub Pages y obtienes una URL pública. Esa URL la pegas en tu .tex como enlace o código QR para que los estudiantes accedan desde el PDF impreso.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </article>
+
+    <!-- ── CÁPSULA 2: GENERADOR ── -->
+    <article class="capsula" id="generador">
+      <div class="capsula-header">
+        <div class="capsula-num">2</div>
+        <div class="capsula-titulo">Generador de Guías — Herramienta</div>
+      </div>
+      <div class="capsula-body">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🎯</div> ¿Para qué sirve?</div>
+          <p>Completa el formulario con los datos de tu guía y obtienes dos salidas automáticas:</p>
+        </div>
+
+        <div class="entregables-grid" style="margin-bottom:16px;">
+          <div class="entregable-card">
+            <div class="entregable-icon">📄</div>
+            <div class="entregable-title">Código .tex</div>
+            <p class="entregable-desc">Documento LaTeX listo para pegar en Overleaf. Incluye estructura, ecuaciones y formato académico.</p>
+          </div>
+          <div class="entregable-card">
+            <div class="entregable-icon">🌐</div>
+            <div class="entregable-title">HTML básico</div>
+            <p class="entregable-desc">Versión web simple de la guía, lista para ser potenciada con el prompt de Claude.</p>
+          </div>
+        </div>
+
+        <div class="alerta">
+          <div class="alerta-icon">💡</div>
+          <div>Puedes usar la herramienta <strong>directamente aquí abajo</strong>. Si prefieres pantalla completa, usa el botón <strong>"Abrir en nueva pestaña"</strong>.</div>
+        </div>
+
+        <div class="embed-wrapper">
+          <div class="embed-bar">
+            <div class="embed-bar-title">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              &nbsp; Generador de Guías de Trabajo — .tex / HTML
+            </div>
+            <a href="generador_guias.html" target="_blank" class="embed-open-btn">↗ Abrir en nueva pestaña</a>
+          </div>
+          <iframe src="generador_guias.html" class="embed-frame" title="Generador de Guías de Trabajo" loading="lazy"></iframe>
+        </div>
+
+        <div class="alerta">
+          <div class="alerta-icon">⚠️</div>
+          <div><strong>Sobre los logos:</strong> No los subas todavía desde el generador. Los logos ya están cargados en el archivo Overleaf que el profe compartirá a cada grupo. Ver instrucciones en la cápsula siguiente.</div>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- ── CÁPSULA 3: OVERLEAF ── -->
+    <article class="capsula" id="overleaf">
+      <div class="capsula-header">
+        <div class="capsula-num">3</div>
+        <div class="capsula-titulo">Compilar en Overleaf con logos institucionales</div>
+      </div>
+      <div class="capsula-body">
+
+        <div class="alerta">
+          <div class="alerta-icon">⚠️</div>
+          <div><strong>No conviene subir los logos directamente desde el generador.</strong> Las imágenes institucionales están precargadas en un proyecto Overleaf con funciones <strong>PRO</strong> que el profe compartirá a cada grupo. Esto garantiza logos correctos en resolución y posición adecuada.</div>
+        </div>
+
+        <div class="steps-card">
+          <div class="steps-card-header">
+            <span class="steps-label">Overleaf</span>
+            <span class="steps-card-title">Instrucciones para compilar tu guía</span>
+          </div>
+          <div class="steps-card-body">
+            <ol class="steps-list">
+              <li><span class="step-num">1</span><span>Espera a que el profe comparta el enlace al proyecto Overleaf de tu grupo. Recibirás un correo con acceso como colaborador.</span></li>
+              <li><span class="step-num">2</span><span>Abre el proyecto compartido. Verás el archivo <code>main.tex</code> con el preámbulo institucional, logos y paquetes listos.</span></li>
+              <li><span class="step-num">3</span><span>Genera el <strong>código .tex</strong> con el Generador. Copia solo el cuerpo del documento (desde <code>\begin{document}</code> hasta <code>\end{document}</code>).</span></li>
+              <li><span class="step-num">4</span><span><strong>No modifiques el preámbulo</strong> del archivo compartido. Solo pega tu contenido dentro del cuerpo.</span></li>
+              <li><span class="step-num">5</span><span>Presiona <strong>Recompilar</strong> en Overleaf. El PDF se generará con logos y formato institucional.</span></li>
+              <li><span class="step-num">6</span><span>Descarga el PDF final. También puedes compartir el link de vista previa de Overleaf.</span></li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="alerta">
+          <div class="alerta-icon">ℹ️</div>
+          <div><strong>Funciones PRO de Overleaf:</strong> compilación rápida, historial ilimitado, colaboración en tiempo real y soporte para paquetes avanzados como <code>tikz</code>, <code>pgfplots</code> y fuentes personalizadas.</div>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- ── CÁPSULA 4: PROMPT CLAUDE ── -->
+    <article class="capsula" id="prompt-html">
+      <div class="capsula-header">
+        <div class="capsula-num">4</div>
+        <div class="capsula-titulo">Transformar el HTML básico en versión profesional con Claude</div>
+      </div>
+      <div class="capsula-body">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🤖</div> ¿Qué hace el prompt?</div>
+          <p>El <strong>Prompt Maestro</strong> es un archivo <code>.md</code> muy detallado que le indica a Claude cómo transformar el HTML básico en una versión de nivel profesional.</p>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-card-icon">🔐</div>
+            <div class="feature-card-title">Modo Docente</div>
+            <p class="feature-card-desc">Panel para definir contraseña, URL del formulario y exportar versión para estudiantes.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-icon">👩‍🎓</div>
+            <div class="feature-card-title">Modo Estudiante</div>
+            <p class="feature-card-desc">Versión exportada con campos interactivos, desbloqueo de respuestas y barra de guardado.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-icon">📐</div>
+            <div class="feature-card-title">MathJax + Charts</div>
+            <p class="feature-card-desc">Ecuaciones renderizadas, gráficos con Chart.js y tipografía editorial.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-icon">📥</div>
+            <div class="feature-card-title">Exporta respuestas</div>
+            <p class="feature-card-desc">Los estudiantes guardan sus respuestas descargando el HTML con sus datos rellenados.</p>
+          </div>
+        </div>
+
+        <div class="alerta">
+          <div class="alerta-icon">✅</div>
+          <div>El resultado es <strong>un único archivo HTML autocontenido</strong>, sin dependencias locales, compatible con todos los navegadores incluyendo Safari/iOS.</div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📥</div> Descargar el Prompt Maestro</div>
+          <p style="margin-bottom:14px;">Descarga el archivo <code>prompt_guia_interactiva.md</code> y entrégaselo a Claude junto con tu HTML básico.</p>
+        </div>
+
+        <div class="download-card">
+          <div class="download-icon-wrap">📄</div>
+          <div class="download-info">
+            <div class="download-title">prompt_guia_interactiva.md</div>
+            <div class="download-desc">Prompt Maestro — Transforma HTML básico en versión profesional Docente/Estudiante · 712 líneas de instrucciones</div>
+          </div>
+          <button onclick="descargarPrompt()" class="download-btn">↓ Descargar .md</button>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📋</div> ¿Cómo usar el prompt en Claude?</div>
+        </div>
+
+        <div class="timeline">
+
+          <div class="tl-step">
+            <div class="tl-dot">1️⃣</div>
+            <div class="tl-card">
+              <div class="tl-card-header"><div class="tl-card-title">Obtén el HTML básico del generador</div></div>
+              <div class="tl-card-body">
+                <p>En la cápsula anterior generaste el HTML básico. Descárgalo con el botón <strong>"Exportar HTML"</strong> del generador.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-step">
+            <div class="tl-dot">2️⃣</div>
+            <div class="tl-card">
+              <div class="tl-card-header"><div class="tl-card-title">Abre Claude y crea una conversación nueva</div></div>
+              <div class="tl-card-body">
+                <p>Ve a <a href="https://claude.ai" target="_blank">claude.ai</a> e inicia un chat nuevo. Usa <strong>Claude Sonnet</strong> o superior para mejores resultados.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-step">
+            <div class="tl-dot">3️⃣</div>
+            <div class="tl-card">
+              <div class="tl-card-header"><div class="tl-card-title">Adjunta el .md y el HTML básico</div></div>
+              <div class="tl-card-body">
+                <p>Sube <strong>ambos archivos</strong> a Claude y escribe:</p>
+                <div class="code-block">
+                  <div class="code-bar">mensaje para Claude</div>
+                  <div class="code-content">Sigue exactamente las instrucciones del archivo .md adjunto para transformar el HTML básico que también adjunto en la versión profesional Docente/Estudiante. Genera el HTML completo y autocontenido.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-step">
+            <div class="tl-dot">4️⃣</div>
+            <div class="tl-card">
+              <div class="tl-card-header"><div class="tl-card-title">Guarda el HTML pro generado</div></div>
+              <div class="tl-card-body">
+                <p>Claude generará el HTML completo. Cópialo, guárdalo como <code>guia_interactiva.html</code> y ábrelo en tu navegador para revisarlo.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </article>
+
+    <!-- ── CÁPSULA 5: GITHUB PAGES ── -->
+    <article class="capsula" id="github">
+      <div class="capsula-header">
+        <div class="capsula-num">5</div>
+        <div class="capsula-titulo">Publicar en GitHub Pages e insertar URL en el .tex</div>
+      </div>
+      <div class="capsula-body">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🚀</div> ¿Por qué GitHub Pages?</div>
+          <p>Te permite publicar archivos HTML <strong>de forma gratuita</strong> y obtener una URL pública permanente como <code>https://usuario.github.io/repo/guia.html</code> para insertar en tu .tex.</p>
+        </div>
+
+        <div class="steps-card">
+          <div class="steps-card-header">
+            <span class="steps-label">GitHub</span>
+            <span class="steps-card-title">Pasos para publicar y obtener la URL</span>
+          </div>
+          <div class="steps-card-body">
+            <ol class="steps-list">
+              <li><span class="step-num">1</span><span>Si no tienes cuenta, créala en <a href="https://github.com" target="_blank">github.com</a>. Es gratis.</span></li>
+              <li><span class="step-num">2</span><span>Crea un repositorio nuevo (ej. <code>guia-edo</code>). Márcalo como <strong>público</strong>.</span></li>
+              <li><span class="step-num">3</span><span>Sube tu <code>guia_interactiva.html</code> con el botón <strong>"Add file → Upload files"</strong>.</span></li>
+              <li><span class="step-num">4</span><span>Ve a <strong>Settings → Pages</strong>. En "Source" selecciona <strong>Deploy from a branch</strong>, elige <code>main</code> y carpeta <code>/ (root)</code>. Guarda.</span></li>
+              <li><span class="step-num">5</span><span>Espera 1-2 minutos. Refresca y aparecerá tu URL: <code>https://tu-usuario.github.io/guia-edo/guia_interactiva.html</code></span></li>
+              <li><span class="step-num">6</span><span>Copia esa URL y pégala en tu <code>.tex</code> como hipervínculo o código QR.</span></li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="capsula-bloque" style="margin-top:18px;">
+          <div class="bloque-label"><div class="bloque-label-icon">📎</div> Insertar la URL en el .tex</div>
+          <p style="margin-bottom:12px;">Con el paquete <code>hyperref</code> (ya incluido en el proyecto Overleaf compartido):</p>
+        </div>
+
+        <div class="code-block">
+          <div class="code-bar">fragmento .tex</div>
+          <div class="code-content">Simplemente tienes que reemplazar "https://example.com" por tu URL en el bloque
+\begin{tikzpicture}
+\node[inner sep=0] (qr)
+{
+  \color[HTML]{1F3554}
+  \qrcode[height=3.5cm]{https://example.com}
+};
+\node at (qr.center)
+{
+  \includegraphics[width=1.5cm]{LOG_SEMINARIO.png}
+};
+\node[below=3pt of qr,align=center]
+{
+  \scriptsize Guía interactiva en línea
+};
+\end{tikzpicture}
+          </div>
+        </div>
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🔗</div> Recursos útiles</div>
+        </div>
+
+        <div class="botones-recursos">
+          <a href="https://claude.ai" target="_blank" class="btn-recurso">🤖 Ir a Claude AI</a>
+          <a href="https://github.com" target="_blank" class="btn-recurso secondary">🐙 Ir a GitHub</a>
+          <a href="https://overleaf.com" target="_blank" class="btn-recurso secondary">☁️ Ir a Overleaf</a>
+          <button onclick="descargarPrompt()" class="btn-recurso secondary" style="border:1.5px solid;cursor:pointer;">↓ Descargar prompt .md</button>
+        </div>
+
+      </div>
+    </article>
+
+  </div>
+
+  <div class="nav-modulos">
+    <a href="modulo-02.html" class="nav-btn">← Módulo 02</a>
+    <a href="../index.html" class="nav-btn">Volver a la página principal</a>
+  </div>
+
+  <footer class="site-footer">
+    <strong>Sesiones Orientativas IV · SEDPEM</strong> &nbsp;·&nbsp; Módulo 03
+  </footer>
+
+
+  <script>
+    const PROMPT_MD = "# \ud83c\udf93 Prompt Maestro \u2014 Transformar HTML b\u00e1sico de gu\u00eda en versi\u00f3n interactiva Docente/Estudiante\n\n---\n\n## CONTEXTO Y OBJETIVO\n\nEres un desarrollador frontend experto en dise\u00f1o editorial y matem\u00e1tica aplicada. Tu tarea es transformar un archivo HTML b\u00e1sico generado por un generador de gu\u00edas de trabajo en una **obra de arte interactiva de nivel profesional**, con dos modos: **Docente** y **Estudiante**. El resultado debe ser un \u00fanico archivo `.html` autocontenido que funcione sin servidor, sin dependencias locales, y que sea compatible con Safari/iOS.\n\n---\n\n## ENTRADA\n\nSe te proporciona un HTML b\u00e1sico con esta estructura t\u00edpica:\n- Portada institucional (logos, t\u00edtulo, autores, evento)\n- Datos del participante + Objetivo + Agenda\n- Actividad inicial (lluvia de ideas / preguntas)\n- **Secci\u00f3n de motivaci\u00f3n** con modelo matem\u00e1tico: nombre del modelo, descripci\u00f3n, ecuaciones LaTeX, glosario de variables, supuestos\n- Desarrollo: enunciado del problema aplicado, variables, cuadr\u00edcula de bosquejo, preguntas de an\u00e1lisis (Partes I y II)\n- Cierre / reflexi\u00f3n\n\n---\n\n## DISE\u00d1O VISUAL \u2014 PALETA Y SISTEMA (NO NEGOCIABLE)\n\nReplica **exactamente** este sistema de tokens CSS. No inventes colores nuevos ni cambies la tipograf\u00eda base:\n\n```css\n:root {\n  --navy:     #1a2a3a;\n  --navy2:    #1e3a5f;\n  --steel:    #2c4f7c;\n  --sky:      #3d6491;\n  --sky-lt:   #5b82b0;\n  --offwhite: #f5f7fa;\n  --cream:    #eef1f6;\n  --white:    #ffffff;\n  --light:    #d0dae8;\n  --muted:    #7a8a99;\n  --text:     #1a2535;\n  --text2:    #3d5575;\n  --accent:   #2c6fad;   /* azul primario */\n  --accent2:  #1a8a72;   /* verde \u2014 respuestas correctas */\n  --accent3:  #b8860b;   /* \u00e1mbar \u2014 advertencias */\n  --error:    #c0392b;\n  --border:   #c8d6e5;\n  --surface:  #f0f4f9;\n  --surface2: #e4ecf5;\n}\n```\n\n**Tipograf\u00eda:** `Playfair Display` (t\u00edtulos serif), `IBM Plex Sans` (cuerpo), `IBM Plex Mono` (c\u00f3digo/math labels). Cargar desde Google Fonts.\n\n**Librer\u00edas externas permitidas (CDN):**\n- MathJax 3: `https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.min.js`\n- Chart.js 4: `https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js`\n\n---\n\n## ARQUITECTURA DEL ARCHIVO\n\nEl HTML es **un \u00fanico archivo** con dos modos:\n\n### \ud83d\udd10 MODO DOCENTE (visible al abrir el archivo por primera vez)\n- **Panel superior** (`teacher-bar`) con gradiente `--navy2 \u2192 --steel`, que contiene:\n  - Campo para definir contrase\u00f1a maestra (tipo `password`) + bot\u00f3n \"\u2713 Establecer\"\n  - Campo para URL del formulario Google/Typeform\n  - Bot\u00f3n \"\ud83d\udce4 Exportar HTML Estudiantes\" \u2192 genera versi\u00f3n para distribuir\n  - Bot\u00f3n \"\ud83d\udc41 Ver todas respuestas\" \u2192 desbloquea todo sin contrase\u00f1a\n- Al establecer contrase\u00f1a: las respuestas esperadas se revelan inmediatamente en modo docente\n- Al exportar: se genera un nuevo HTML con el panel docente oculto, la contrase\u00f1a embebida en base64 (`safeB64Encode(pwd + ':guia')`) y la URL del formulario precargada\n\n### \ud83d\udc69\u200d\ud83c\udf93 MODO ESTUDIANTE (archivo exportado)\n- Sin panel docente visible\n- **Unlock banner** (barra azul marina) con input de contrase\u00f1a y bot\u00f3n \"\ud83d\udd13 Desbloquear\" para revelar respuestas esperadas con la contrase\u00f1a que el docente distribuy\u00f3\n- **Barra inferior fija** (\"Guardar mis respuestas\") que exporta el HTML con las respuestas escritas por el estudiante rellenas en los campos\n\n---\n\n## SECCIONES Y SU DISE\u00d1O DETALLADO\n\n### 1. HEADER HERO\n```\nbackground: linear-gradient(135deg, --navy 0%, --navy2 40%, --steel 100%)\n```\n- T\u00edtulo en `Playfair Display`, tama\u00f1o `clamp(1.9rem, 5vw, 3rem)`, con `<em>` en `#7eb8e8`\n- Subt\u00edtulo en `IBM Plex Mono`, 11px, `letter-spacing:.18em`, uppercase, color `--sky-lt`\n- Meta (autores, instituci\u00f3n, a\u00f1o) en `--light`, 13px\n- Badge de modo (punto verde pulsante + label \"Modo Docente\" / \"Modo Estudiante\") con `backdrop-filter:blur(4px)`\n- Part\u00edculas decorativas animadas (5 divs `.particle` con `animation:drift linear infinite`)\n\n### 2. DATOS DEL PARTICIPANTE\n- Card blanca, `border-radius:12px`, `box-shadow:0 2px 12px rgba(26,42,58,.07)`\n- Grid 2\u00d72 para campos: Nombre, Fecha, Instituci\u00f3n, Curso \u2014 con `border-bottom` animated focus\n- Caja de objetivo con `border-left:3px solid --accent`\n- Agenda como `grid` de chips oscuros sobre fondo `--navy` con `border-radius:12px`\n\n### 3. ACTIVIDAD INICIAL\n- Lista de \u00edtems con numeraci\u00f3n circular (gradiente `--navy2 \u2192 --accent`)\n- `textarea` con `border:1px dashed --border`, m\u00ednimo 52px, resize vertical\n- Hover: `border-color:--sky-lt; box-shadow: 0 3px 12px rgba(44,79,124,.1)`\n\n### 4. \ud83c\udf1f SECCI\u00d3N DE MOTIVACI\u00d3N (LA M\u00c1S IMPORTANTE)\n\nEsta secci\u00f3n debe ser **visualmente rica y pedag\u00f3gicamente completa**. Incluye:\n\n#### 4a. Hero del modelo (fondo oscuro animado)\n```\nbackground: linear-gradient(135deg, --navy 0%, --navy2 50%, #0f2235 100%)\nborder-radius: 16px\nbox-shadow: 0 8px 32px rgba(26,42,58,.25)\n```\n- Etiqueta monospace uppercase en `--sky-lt`\n- T\u00edtulo del modelo en `Playfair Display` 1.6rem, blanco, con `<em>` en `#7eb8e8`\n- Animar los nodos del modelo (flotaci\u00f3n vertical con `@keyframes nodeFloat`) con colores por compartimento\n\n#### 4b. Ecuaciones del modelo \u2014 presentaci\u00f3n completa\nPara **cada ecuaci\u00f3n** del sistema, mostrar:\n1. La ecuaci\u00f3n centrada con MathJax `\\[...\\]`, tama\u00f1o grande\n2. Un bloque de interpretaci\u00f3n `rgba(255,255,255,.06)` con:\n   - `<strong style=\"color:#7eb8e8\">Interpretaci\u00f3n:</strong>`\n   - Texto explicativo **prolijo y detallado**: qu\u00e9 significa cada t\u00e9rmino, qu\u00e9 pasa si aumenta/disminuye, relaci\u00f3n causa-efecto en palabras accesibles para 3\u00b0 medio\n   - Chips de t\u00e9rminos clave al pie del bloque (flex-wrap, gap)\n3. La ley de conservaci\u00f3n (si aplica) en bloque azul `rgba(44,111,173,.15)`\n\n**Nivel de detalle requerido:** El estudiante de 3\u00b0 medio debe entender la ecuaci\u00f3n SIN conocer c\u00e1lculo. Explicar en lenguaje natural + notaci\u00f3n matem\u00e1tica accesible. Ejemplo del nivel esperado:\n> *\"La tasa de cambio de Susceptibles es siempre negativa \u2014 la poblaci\u00f3n susceptible solo puede disminuir. El t\u00e9rmino \u03b2\u00b7S\u00b7I modela los nuevos contagios: cada encuentro entre un susceptible y un infectado tiene probabilidad proporcional a \u03b2 de resultar en contagio...\"*\n\n#### 4c. Gr\u00e1fica interactiva (Chart.js) con panel de an\u00e1lisis matem\u00e1tico\n\nEl t\u00edtulo del chart-header debe ser gen\u00e9rico: **\"\ud83d\udcca Simulaci\u00f3n del modelo\"** (no mencionar ning\u00fan modelo espec\u00edfico). Los par\u00e1metros de los sliders deben tomarse del glosario de variables del modelo que venga en el HTML de entrada \u2014 si el modelo tiene par\u00e1metros distintos, usar los que correspondan. Si el modelo no tiene simulaci\u00f3n num\u00e9rica posible (e.g. es algebraico o est\u00e1tico), omitir la gr\u00e1fica y reemplazar por una **visualizaci\u00f3n est\u00e1tica** de la soluci\u00f3n con MathJax + descripci\u00f3n del comportamiento.\n\n```\nT\u00edtulo: \"\ud83d\udcca Simulaci\u00f3n del modelo\"  \u2190 siempre gen\u00e9rico\nControles: sliders + inputs num\u00e9ricos sincronizados, bot\u00f3n Play/Pause\nIndicadores din\u00e1micos: los que apliquen al modelo (R\u2080, tasa de crecimiento, punto de equilibrio, etc.)\nPesta\u00f1as de an\u00e1lisis bajo la gr\u00e1fica:\n```\n\n##### Controles de par\u00e1metros \u2014 slider + input num\u00e9rico sincronizados (OBLIGATORIO)\n\nCada par\u00e1metro debe tener **ambos controles vinculados**. Cambiar cualquiera de los dos actualiza el otro y redibuja la gr\u00e1fica:\n\n```html\n<!-- Patr\u00f3n HTML para cada par\u00e1metro (replicar por cada variable del modelo) -->\n<div class=\"param-row\">\n  <label class=\"param-label\">\u03b2 <span class=\"param-desc\">tasa de contagio</span></label>\n  <div class=\"param-controls\">\n    <input type=\"range\"  id=\"slider_beta\" min=\"0.01\" max=\"1.0\" step=\"0.01\" value=\"0.3\"\n           oninput=\"syncParam('beta', +this.value); updateChart()\">\n    <input type=\"number\" id=\"input_beta\"  min=\"0.01\" max=\"1.0\" step=\"0.01\" value=\"0.3\"\n           oninput=\"syncParam('beta', +this.value); updateChart()\">\n  </div>\n</div>\n```\n\n```javascript\n// Mantener slider e input num\u00e9rico siempre sincronizados\nfunction syncParam(name, val) {\n  // Clamp al rango del slider\n  var slider = document.getElementById('slider_' + name);\n  var minV = parseFloat(slider.min), maxV = parseFloat(slider.max);\n  val = Math.max(minV, Math.min(maxV, isNaN(val) ? minV : val));\n  slider.value = val;\n  document.getElementById('input_' + name).value = val;\n  // Guardar en objeto de par\u00e1metros globales\n  simParams[name] = val;\n}\n```\n\n```css\n/* Estilos para la fila de controles */\n.param-row {\n  display: flex;\n  align-items: center;\n  gap: .75rem;\n  margin-bottom: .6rem;\n}\n.param-controls {\n  display: flex;\n  align-items: center;\n  gap: .5rem;\n  flex: 1;\n}\n.param-controls input[type=range]  { flex: 1; accent-color: var(--accent); }\n.param-controls input[type=number] {\n  width: 70px;\n  padding: .25rem .4rem;\n  border: 1px solid var(--border);\n  border-radius: 6px;\n  font-family: 'IBM Plex Mono', monospace;\n  font-size: 13px;\n  color: var(--text);\n  background: var(--surface);\n  text-align: center;\n}\n.param-controls input[type=number]:focus {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px rgba(44,111,173,.15);\n}\n```\n\n##### Bot\u00f3n Play / Pause con marcador animado (OBLIGATORIO)\n\nEl bot\u00f3n avanza un **marcador de tiempo** (l\u00ednea vertical + punto destacado) a lo largo de la gr\u00e1fica ya calculada mediante `requestAnimationFrame`. No recalcula la simulaci\u00f3n en cada frame \u2014 solo mueve el marcador sobre los datos existentes, lo que garantiza fluidez.\n\n```javascript\n// Estado de la animaci\u00f3n\nvar simParams = {};      // valores actuales de todos los par\u00e1metros\nvar simData   = {};      // { labels: [...], datasets: [{data:[...]}, ...] }\nvar animState = {\n  running:  false,\n  frameId:  null,\n  step:     0,           // \u00edndice actual en simData.labels\n  speed:    1            // pasos por frame (ajustable)\n};\n\n// Referencia al plugin de anotaci\u00f3n del marcador\nvar timeMarkerPlugin = {\n  id: 'timeMarker',\n  afterDraw: function(chart) {\n    if (animState.step <= 0) return;\n    var ctx   = chart.ctx;\n    var xAxis = chart.scales.x;\n    var yAxis = chart.scales.y;\n    var x     = xAxis.getPixelForValue(animState.step);\n    ctx.save();\n    // L\u00ednea vertical semitransparente\n    ctx.beginPath();\n    ctx.moveTo(x, yAxis.top);\n    ctx.lineTo(x, yAxis.bottom);\n    ctx.strokeStyle = 'rgba(255,255,255,0.5)';\n    ctx.lineWidth   = 1.5;\n    ctx.setLineDash([4, 3]);\n    ctx.stroke();\n    ctx.restore();\n  }\n};\n\nfunction togglePlay() {\n  animState.running = !animState.running;\n  var btn = document.getElementById('btnPlayPause');\n  if (animState.running) {\n    btn.textContent = '\u23f8 Pausar';\n    btn.classList.add('playing');\n    animateStep();\n  } else {\n    btn.textContent = '\u25b6 Reproducir';\n    btn.classList.remove('playing');\n    if (animState.frameId) cancelAnimationFrame(animState.frameId);\n  }\n}\n\nfunction animateStep() {\n  if (!animState.running) return;\n  var total = simData.labels ? simData.labels.length : 0;\n  animState.step = (animState.step + animState.speed) % total;\n  if (window.simChart) window.simChart.update('none'); // 'none' = sin animaci\u00f3n CSS\n  animState.frameId = requestAnimationFrame(animateStep);\n}\n\nfunction resetAnimation() {\n  animState.step    = 0;\n  animState.running = false;\n  var btn = document.getElementById('btnPlayPause');\n  if (btn) { btn.textContent = '\u25b6 Reproducir'; btn.classList.remove('playing'); }\n  if (animState.frameId) cancelAnimationFrame(animState.frameId);\n}\n```\n\n```html\n<!-- Barra de controles de reproducci\u00f3n \u2014 colocar encima o debajo del canvas -->\n<div class=\"playback-bar\">\n  <button id=\"btnPlayPause\" class=\"btn-play\" onclick=\"togglePlay()\">\u25b6 Reproducir</button>\n  <button class=\"btn-reset\"  onclick=\"resetAnimation(); updateChart()\">\u27f3 Reiniciar</button>\n  <label class=\"speed-label\">\n    Velocidad\n    <input type=\"range\" id=\"speedSlider\" min=\"1\" max=\"10\" step=\"1\" value=\"1\"\n           oninput=\"animState.speed = +this.value; document.getElementById('speedVal').textContent = this.value + 'x'\">\n    <span id=\"speedVal\">1x</span>\n  </label>\n</div>\n```\n\n```css\n.playback-bar {\n  display: flex;\n  align-items: center;\n  gap: .75rem;\n  flex-wrap: wrap;\n  margin: .75rem 0;\n}\n.btn-play {\n  background: var(--accent);\n  color: #fff;\n  border: none;\n  border-radius: 8px;\n  padding: .45rem 1.1rem;\n  font-size: 13px;\n  font-family: 'IBM Plex Sans', sans-serif;\n  cursor: pointer;\n  transition: background .2s;\n}\n.btn-play.playing { background: var(--accent3); }\n.btn-play:hover   { filter: brightness(1.12); }\n.btn-reset {\n  background: transparent;\n  color: var(--sky-lt);\n  border: 1px solid var(--steel);\n  border-radius: 8px;\n  padding: .45rem .9rem;\n  font-size: 13px;\n  cursor: pointer;\n}\n.speed-label {\n  display: flex;\n  align-items: center;\n  gap: .4rem;\n  font-size: 12px;\n  color: var(--sky-lt);\n  font-family: 'IBM Plex Mono', monospace;\n}\n```\n\n**Registro del plugin en Chart.js:**\n```javascript\n// Al crear el chart, pasar el plugin y activar el update 'none' para no conflictuar con la animaci\u00f3n propia de Chart.js\nwindow.simChart = new Chart(ctx, {\n  type: 'line',\n  data: simData,\n  options: {\n    animation: false,          // desactivar animaci\u00f3n CSS de Chart.js\n    responsive: true,\n    // ... resto de opciones\n  },\n  plugins: [timeMarkerPlugin]  // registrar el marcador\n});\n```\n\nCada pesta\u00f1a debe contener explicaciones **al nivel de 3\u00b0 medio**, con:\n\n**Pesta\u00f1a \"L\u00edmites\":**\n- Formulaci\u00f3n formal con MathJax\n- Explicaci\u00f3n en lenguaje natural: qu\u00e9 significa \"tender a\", qu\u00e9 pasa con cada funci\u00f3n a largo plazo\n- Conexi\u00f3n visual: qu\u00e9 observar en la gr\u00e1fica al mover los sliders\n- Conceptos previos necesarios\n\n**Pesta\u00f1a \"Derivadas\":**\n- Punto cr\u00edtico relevante del modelo con MathJax\n- Explicaci\u00f3n intuitiva: qu\u00e9 mide la derivada, d\u00f3nde est\u00e1 el m\u00e1ximo/m\u00ednimo, c\u00f3mo afectan los par\u00e1metros\n- Criterio de crecimiento/decrecimiento de cada funci\u00f3n\n- Conexi\u00f3n con la gr\u00e1fica: d\u00f3nde est\u00e1 ese punto, c\u00f3mo desplazarlo\n\n**Pesta\u00f1a \"Integrales\":**\n- Integral relevante del modelo con MathJax\n- Explicaci\u00f3n intuitiva: qu\u00e9 representa el \u00e1rea bajo la curva en el contexto del modelo\n- Conexi\u00f3n con la ley de conservaci\u00f3n si aplica\n\n**Pesta\u00f1a \"An\u00e1lisis\"** (o denominaci\u00f3n apropiada al modelo):\n- N\u00famero adimensional o indicador clave del modelo (R\u2080, n\u00famero de Lotka, tasa neta de reproducci\u00f3n, etc.)\n- Regla pr\u00e1ctica: qu\u00e9 valores del indicador implican estabilidad, brote, extinci\u00f3n, etc.\n- Conexi\u00f3n con los sliders: c\u00f3mo variar par\u00e1metros para cambiar el r\u00e9gimen\n\n#### 4d. Glosario de variables\nGrid 2 columnas, cada variable en card `--surface` con:\n- S\u00edmbolo en `IBM Plex Mono`, color `--accent`, fondo `--surface2`\n- Descripci\u00f3n breve a la derecha\n\n#### 4e. Supuestos del modelo\nLista con \u00edconos, fondo `--surface`, borde izquierdo `--accent`\n\n### 5. DESARROLLO (Problema aplicado)\n\n#### Enunciado\n- Card sobre fondo oscuro (igual que motivaci\u00f3n pero m\u00e1s compacta)\n- Narrar el problema con gancho contextual\n- Las ecuaciones espec\u00edficas del problema (valores num\u00e9ricos) en display `\\[...\\]`\n\n#### Parte I \u2014 Variables\n- Grid 2 columnas de `.var-item` (fondo `--surface`, hover \u2192 `--surface2`)\n- S\u00edmbolo en monospace + input `border-bottom` animado\n- Bloque de respuestas esperadas colapsado (`.answer-block`, max-height:0 \u2192 visible con clase)\n\n#### Parte II \u2014 Preguntas de an\u00e1lisis\nPara cada pregunta:\n```html\n<div class=\"q-item\">\n  <div class=\"q-header\">\n    <div class=\"q-num\">N</div>  <!-- c\u00edrculo gradiente -->\n    <div class=\"q-text\">Texto de la pregunta</div>\n  </div>\n  <textarea class=\"q-answer-area\" rows=\"2\" placeholder=\"Tu respuesta\u2026\"></textarea>\n  <!-- OPCI\u00d3N: campo de imagen -->\n  <div class=\"img-upload-zone\">\ud83d\udcce Adjuntar imagen (opcional)</div>\n  <div class=\"answer-block\" id=\"aN\">\n    <div class=\"answer-inner\">\n      <div class=\"ans-label\">\u2705 Respuesta esperada</div>\n      [respuesta detallada con LaTeX]\n    </div>\n  </div>\n</div>\n```\n\n**\u2b50 UPLOAD DE IM\u00c1GENES:** Agregar zona de carga de imagen debajo de cada textarea de pregunta:\n```javascript\n// La imagen se convierte a base64 y se muestra en miniatura inline\n// El input type=file acepta image/*\n// Preview con max-height:120px, border-radius:8px\n// Bot\u00f3n \u00d7  para eliminar\n```\n\n### 6. CIERRE / REFLEXI\u00d3N\n- Intro con gradiente oscuro + cita decorativa (`\"` gigante, `Playfair Display`, `rgba(255,255,255,.06)`)\n- Items en cards blancas con n\u00famero lateral (gradiente vertical `--navy2 \u2192 --accent`)\n- Textarea resize vertical con focus `--accent`\n- **CTA del formulario:** Card con gradiente `--accent \u2192 --navy2`, bot\u00f3n blanco que abre la URL configurada por el docente\n\n---\n\n## L\u00d3GICA JAVASCRIPT REQUERIDA\n\n### \u26a0\ufe0f ARQUITECTURA DE LA CONTRASE\u00d1A \u2014 CR\u00cdTICO (leer completo antes de codear)\n\nEste es el \u00fanico patr\u00f3n correcto. No usar ninguna variante alternativa.\n\n#### Principio fundamental: placeholder en texto plano\n\nEl archivo docente contiene literalmente el string `__SP_PLACEHOLDER__` en el c\u00f3digo JS como valor inicial de `_sp`. Al exportar para estudiantes, se hace un **`.replace()` en texto plano** sobre el `outerHTML` completo \u2014 nunca manipulaci\u00f3n DOM.\n\n```\nPor qu\u00e9 esto es correcto:\n\u2705 El replace() en texto plano es 100% fiable\n\u2705 No depende de que scripts se re-ejecuten (cloneNode no re-ejecuta scripts)\n\u2705 No hay conflictos de scope ni redeclaraciones\n\u2705 El DOMContentLoaded del archivo generado detecta limpiamente si _sp ya fue reemplazado\n```\n\n#### Estructura JS del archivo docente (modo Docente)\n\n```javascript\n// Variable global \u2014 declarar UNA sola vez con var al nivel del script principal\nvar _sp  = '__SP_PLACEHOLDER__';  // literal \u2014 se reemplaza al exportar\nvar masterPwd = '';\nvar formUrl   = '';\n\nfunction safeB64Encode(str) {\n  return btoa(unescape(encodeURIComponent(str)));\n}\n\n// Al establecer contrase\u00f1a en modo docente\nfunction setMasterPwd() {\n  var input = document.getElementById('pwdInput');\n  masterPwd = input.value.trim();\n  if (!masterPwd) return;\n  // Revelar todas las respuestas inmediatamente en modo docente\n  document.querySelectorAll('.answer-block').forEach(function(b) {\n    b.classList.add('visible');\n  });\n  document.getElementById('pwdStatus').textContent = '\u2713 Contrase\u00f1a establecida';\n}\n\n// Exportar archivo para estudiantes\nfunction exportStudent() {\n  if (!masterPwd) { alert('Primero establece una contrase\u00f1a.'); return; }\n  var encoded = safeB64Encode(masterPwd + ':guia');\n\n  // Tomar el HTML completo como texto plano y hacer replace del placeholder\n  var html = document.documentElement.outerHTML;\n  html = html.replace('__SP_PLACEHOLDER__', encoded);\n  html = html.replace('__FU_PLACEHOLDER__', formUrl);\n\n  var blob = new Blob(['<!DOCTYPE html>\\n' + html], { type: 'text/html;charset=utf-8' });\n  var url  = URL.createObjectURL(blob);\n  var a    = document.createElement('a');\n  a.href     = url;\n  a.download = 'guia_estudiante.html';\n  a.click();\n  setTimeout(function() { URL.revokeObjectURL(url); }, 3000);\n}\n```\n\n#### DOMContentLoaded \u2014 detecci\u00f3n de modo\n\n```javascript\ndocument.addEventListener('DOMContentLoaded', function() {\n  // Si _sp ya no es el placeholder \u2192 estamos en el archivo estudiante\n  if (_sp !== '__SP_PLACEHOLDER__') {\n    // Ocultar panel docente\n    var tb = document.getElementById('teacherBar');\n    if (tb) tb.style.display = 'none';\n    // Mostrar unlock banner y barra de guardar\n    var ub = document.getElementById('unlockBanner');\n    if (ub) ub.style.display = 'flex';\n    var sb = document.getElementById('studentSaveBar');\n    if (sb) sb.style.display = 'flex';\n    // Actualizar badge de modo\n    var badge = document.getElementById('modeBadge');\n    if (badge) badge.textContent = '\u25cf Modo Estudiante';\n  }\n  // Si _sp ES el placeholder \u2192 modo docente, no hacer nada especial\n});\n```\n\n#### Funci\u00f3n de desbloqueo del estudiante\n\n```javascript\nfunction globalUnlock() {\n  var input = document.getElementById('studentPwdInput');\n  var attempt = safeB64Encode(input.value.trim() + ':guia');\n  if (attempt === _sp) {\n    document.querySelectorAll('.answer-block').forEach(function(b) {\n      b.classList.add('visible');\n    });\n    var ub = document.getElementById('unlockBanner');\n    if (ub) ub.style.display = 'none';\n  } else {\n    document.getElementById('unlockError').textContent = '\u2715 Contrase\u00f1a incorrecta';\n  }\n}\n```\n\n#### Bot\u00f3n \"Ver todas respuestas\" (solo modo docente)\n\n```javascript\nfunction viewAllAnswers() {\n  document.querySelectorAll('.answer-block').forEach(function(b) {\n    b.classList.add('visible');\n  });\n}\n```\n\n---\n\n### Sistema de im\u00e1genes\n\n**\u26a0\ufe0f Regla cr\u00edtica:** Cuando el estudiante sube una imagen, esta se lee con `FileReader.readAsDataURL()` y el resultado se asigna al `src` de un `<img class=\"img-preview\">` que **debe existir siempre en el DOM** (con `src=\"\"` y `display:none` inicialmente). As\u00ed, al clonar el DOM para exportar, las im\u00e1genes base64 se incluyen autom\u00e1ticamente sin procesamiento adicional.\n\n```javascript\nfunction handleImageUpload(input, containerId) {\n  var file = input.files[0];\n  if (!file || !file.type.startsWith('image/')) return;\n  var reader = new FileReader();\n  reader.onload = function(e) {\n    var container = document.getElementById(containerId);\n    var img = container.querySelector('.img-preview');\n    img.src = e.target.result;   // base64 queda en el DOM\n    img.style.display = 'block';\n    container.querySelector('.img-placeholder').style.display = 'none';\n    container.querySelector('.img-remove').style.display = 'inline-flex';\n  };\n  reader.readAsDataURL(file);\n}\n\nfunction removeImage(containerId) {\n  var container = document.getElementById(containerId);\n  var img = container.querySelector('.img-preview');\n  img.src = '';\n  img.style.display = 'none';\n  container.querySelector('.img-placeholder').style.display = 'flex';\n  container.querySelector('.img-remove').style.display = 'none';\n  container.querySelector('input[type=file]').value = '';\n}\n```\n\n**HTML de cada zona de imagen:**\n```html\n<div class=\"img-upload-zone\" id=\"imgZone_Q1\">\n  <input type=\"file\" accept=\"image/*\" onchange=\"handleImageUpload(this,'imgZone_Q1')\" style=\"display:none\" id=\"imgInput_Q1\">\n  <div class=\"img-placeholder\" onclick=\"document.getElementById('imgInput_Q1').click()\">\n    \ud83d\udcce <span>Adjuntar imagen (opcional)</span>\n  </div>\n  <!-- img SIEMPRE en DOM, oculto hasta que se suba algo -->\n  <img class=\"img-preview\" src=\"\" alt=\"Imagen adjunta\"\n       style=\"display:none;max-width:100%;max-height:180px;border-radius:8px;margin-top:.5rem;border:1px solid var(--border)\">\n  <button class=\"img-remove\" style=\"display:none\" onclick=\"removeImage('imgZone_Q1')\">\u00d7 Quitar imagen</button>\n</div>\n```\n\n---\n\n### Simulaci\u00f3n num\u00e9rica (m\u00e9todo de Euler \u2014 gen\u00e9rico)\n\n```javascript\n// Adaptar seg\u00fan el modelo del HTML de entrada.\n// Si el modelo es un sistema de EDO, usar Euler con dt = 0.5, steps = 300.\n// Si el modelo es una ecuaci\u00f3n expl\u00edcita (ej. crecimiento exponencial, log\u00edstico),\n// evaluar directamente en cada paso de tiempo.\n// Los par\u00e1metros (nombres, rangos, valores por defecto) deben inferirse\n// del glosario de variables y ecuaciones del modelo de entrada.\n// Ejemplo gen\u00e9rico para sistema de EDO de 3 compartimentos:\n//   dX1/dt = f1(X1, X2, X3, params)\n//   dX2/dt = f2(X1, X2, X3, params)\n//   dX3/dt = f3(X1, X2, X3, params)\n// Indicadores din\u00e1micos: calcular los que sean relevantes para el modelo\n// (punto de equilibrio, m\u00e1ximo, valor asint\u00f3tico, tasa de crecimiento, etc.)\n```\n\n---\n\n### Guardar respuestas del estudiante \u2014 CR\u00cdTICO\n\nLa barra inferior fija (\"\ud83d\udcbe Exportar mis respuestas\") debe generar un HTML **completamente autocontenido** que preserve:\n\n1. **Todos los textos escritos** en `textarea` e `input[type=text]`, `input[type=date]`\n2. **Todas las im\u00e1genes subidas**, embebidas como base64 en el `src` de los `<img>` correspondientes\n3. **El estado visual completo** \u2014 la p\u00e1gina exportada debe verse id\u00e9ntica a como estaba cuando el estudiante hizo clic en exportar\n\n```javascript\nfunction exportStudentAnswers() {\n  // 1. Clonar el DOM completo del documento actual para capturar el estado vivo,\n  //    incluyendo im\u00e1genes ya cargadas en base64\n  var clone = document.documentElement.cloneNode(true);\n\n  // 2. Copiar valores de textareas (cloneNode NO copia el value en vivo)\n  var liveTas  = document.querySelectorAll('textarea');\n  var cloneTas = clone.querySelectorAll('textarea');\n  liveTas.forEach(function(ta, i) {\n    if (cloneTas[i]) cloneTas[i].textContent = ta.value;\n  });\n\n  // 3. Copiar values de inputs de texto/fecha\n  var liveIns  = document.querySelectorAll('input[type=text], input[type=date]');\n  var cloneIns = clone.querySelectorAll('input[type=text], input[type=date]');\n  liveIns.forEach(function(inp, i) {\n    if (cloneIns[i]) cloneIns[i].setAttribute('value', inp.value);\n  });\n\n  // 4. Las im\u00e1genes base64 ya est\u00e1n en el src del <img> del DOM vivo;\n  //    cloneNode las copia autom\u00e1ticamente.\n\n  // 5. Ocultar barras de acci\u00f3n en la copia\n  var saveBar   = clone.querySelector('#studentSaveBar');\n  var unlockBar = clone.querySelector('#unlockBanner');\n  if (saveBar)   saveBar.style.display   = 'none';\n  if (unlockBar) unlockBar.style.display = 'none';\n\n  // 6. A\u00f1adir sello de fecha\n  var heroBadge = clone.querySelector('.hero-meta');\n  if (heroBadge) {\n    var stamp = document.createElement('div');\n    stamp.style.cssText = 'margin-top:.6rem;font-size:11px;color:#4ade80;font-family:IBM Plex Mono,monospace';\n    stamp.textContent   = '\ud83d\udcc4 Respuestas guardadas: ' + new Date().toLocaleString('es-CL');\n    heroBadge.appendChild(stamp);\n  }\n\n  // 7. Serializar y descargar\n  var nombre = '';\n  var ni = document.querySelector('.field-item input[type=text]');\n  if (ni && ni.value) nombre = '_' + ni.value.replace(/[^\\w\\u00e1-\\u00fa\\u00d1\\u00f1 ]/g, '')\n                                               .replace(/ /g, '_').substring(0, 20);\n  var out  = '<!DOCTYPE html>\\n' + clone.outerHTML;\n  var blob = new Blob([out], { type: 'text/html;charset=utf-8' });\n  var url  = URL.createObjectURL(blob);\n  var a    = document.createElement('a');\n  a.href     = url;\n  a.download = 'respuestas' + nombre + '.html';\n  a.click();\n  setTimeout(function() { URL.revokeObjectURL(url); }, 3000);\n}\n```\n\n---\n\n## COMPATIBILIDAD T\u00c9CNICA REQUERIDA\n\n```css\n/* Safari/iOS */\n-webkit-backdrop-filter: blur(4px);\ninput[type=range] { -webkit-appearance: none; }\ntextarea { -webkit-appearance: none; border-radius: 6px; }\n/* iOS no hace zoom si font-size >= 16px en inputs */\ninput[type=text], input[type=date], input[type=password] { font-size: 16px; }\n/* safe-area para barra inferior fija en iPhone con notch */\n@supports (-webkit-touch-callout: none) {\n  #studentSaveBar { padding-bottom: calc(.8rem + env(safe-area-inset-bottom)); }\n}\n/* Respetar preferencias de movimiento reducido */\n@media (prefers-reduced-motion: reduce) { *{ animation:none!important; transition:none!important } }\n```\n\n---\n\n## INSTRUCCIONES FINALES\n\n1. **Genera el HTML completo** en una \u00fanica respuesta, sin truncar, sin `<!-- contin\u00faa -->`.\n2. **No uses un `STUDENT_TEMPLATE` est\u00e1tico separado.** El archivo docente es el mismo archivo base para ambos modos. La diferencia entre modos la detecta el `DOMContentLoaded` seg\u00fan si `_sp` es el placeholder o no.\n3. **Toda ecuaci\u00f3n LaTeX** debe estar dentro de `\\(...\\)` (inline) o `\\[...\\]` (display). MathJax se inicializa con `tex:{inlineMath:[['\\\\(','\\\\)']],displayMath:[['\\\\[','\\\\]']]}`.\n4. **Las respuestas esperadas** deben estar en `.answer-block` con `max-height:0; opacity:0` por defecto, y revelan con clase `.visible`.\n5. **El formulario** se configura en el panel docente y se embebe en la URL del bot\u00f3n CTA de cierre.\n6. Si la secci\u00f3n de motivaci\u00f3n del HTML de entrada tiene ecuaciones LaTeX vac\u00edas o solo con texto `Se recomienda completar en Overleaf`, **igualmente genera la secci\u00f3n con un placeholder elegante** indicando d\u00f3nde ir\u00e1 el modelo.\n7. Respeta el orden de secciones tal como vienen en el HTML de entrada. No reordenes ni elimines contenido.\n8. El estilo debe ser **consistente**: mismos gradientes, mismas familias tipogr\u00e1ficas, misma densidad visual, misma paleta. Todas las gu\u00edas generadas deben parecer de la misma familia.\n9. **Persistencia de im\u00e1genes en la exportaci\u00f3n:** Las im\u00e1genes subidas por el estudiante deben estar en `<img class=\"img-preview\">` siempre presentes en el DOM (con `src=\"\"` y `display:none` inicialmente). La exportaci\u00f3n de respuestas usa `document.documentElement.cloneNode(true)` sobre el DOM vivo \u2014 este es el \u00fanico m\u00e9todo que garantiza que las im\u00e1genes base64 queden embebidas en el HTML exportado.\n10. **Nunca redeclarar `_sp`** en ning\u00fan otro bloque `<script>`. Existe una sola declaraci\u00f3n `var _sp = '__SP_PLACEHOLDER__'` en el script principal. El DOMContentLoaded la lee; no la reasigna.\n\n---\n\n## C\u00d3MO USAR ESTE PROMPT\n\nCopia este prompt completo y agr\u00e9galo como prefijo, luego pega el contenido del HTML b\u00e1sico exportado por el generador de gu\u00edas. Ejemplo:\n\n```\n[TODO EL PROMPT DE ARRIBA]\n\n---\n\n## HTML DE ENTRADA A TRANSFORMAR\n\n[pega aqu\u00ed el contenido del archivo HTML b\u00e1sico]\n```\n\nClaude generar\u00e1 el HTML interactivo completo listo para usar.\n";
+
+    function descargarPrompt() {
+      const blob = new Blob([PROMPT_MD], { type: 'text/markdown;charset=utf-8' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = 'prompt_guia_interactiva.md';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  </script>
+
+</body>
+</html>

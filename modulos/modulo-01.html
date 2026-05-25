@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 01 – Sesiones Orientativas IV SEDPEM</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .pdf-tabs { display:flex; gap:8px; margin-bottom:0; flex-wrap:wrap; }
+    .pdf-tab {
+      background:transparent; border:1.5px solid var(--borde);
+      color:var(--gris-texto); font-size:13px; font-weight:500;
+      padding:8px 18px; border-radius:10px 10px 0 0; cursor:pointer;
+      transition:all .2s; font-family:'Inter',sans-serif;
+    }
+    .pdf-tab:hover { background:var(--gris-claro); color:var(--azul-oscuro); }
+    .pdf-tab.active { background:var(--azul-oscuro); color:#fff; border-color:var(--azul-oscuro); }
+    .pdf-panel { display:none; border:1.5px solid var(--borde); border-radius:0 12px 12px 12px; overflow:hidden; background:#f0f0f0; }
+    .pdf-panel.active { display:block; }
+    .pdf-panel iframe { width:100%; height:580px; border:none; display:block; }
+
+    .actividad-card {
+      background:var(--gris-claro); border:1px solid var(--borde);
+      border-left:4px solid var(--azul-acento); border-radius:12px;
+      padding:18px 22px; margin-bottom:14px;
+    }
+    .actividad-card.inicio { border-left-color:#1d9e75; }
+    .actividad-card.cierre { border-left-color:#993c1d; }
+    .act-header { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .act-badge { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:3px 10px; border-radius:999px; }
+    .act-badge.inicio  { background:#e1f5ee; color:#0f6e56; }
+    .act-badge.desarrollo { background:#e8f0fe; color:#185fa5; }
+    .act-badge.cierre  { background:#faece7; color:#993c1d; }
+    .act-tiempo { margin-left:auto; font-size:12px; color:var(--gris-texto); font-weight:500; }
+    .act-titulo { font-family:'Syne',sans-serif; font-size:14.5px; font-weight:700; color:var(--azul-oscuro); margin-bottom:4px; }
+    .act-desc { font-size:13.5px; color:var(--gris-texto); line-height:1.65; }
+
+    .tarea-box { background:linear-gradient(135deg,var(--azul-oscuro),var(--azul-medio)); border-radius:16px; padding:28px; color:#fff; margin-top:8px; }
+    .tarea-box h4 { font-family:'Syne',sans-serif; font-size:17px; font-weight:800; color:var(--dorado-claro); margin-bottom:14px; }
+    .tarea-box p, .tarea-box li { font-size:14px; color:rgba(255,255,255,.82); line-height:1.7; }
+    .tarea-box ol { padding-left:20px; }
+    .tarea-box li { margin-bottom:6px; }
+    .tarea-box strong { color:#fff; }
+    .tarea-fecha { display:inline-flex; align-items:center; gap:8px; background:rgba(240,165,0,.2); border:1px solid rgba(240,165,0,.4); color:var(--dorado-claro); font-size:12px; font-weight:600; padding:5px 14px; border-radius:999px; margin-bottom:16px; }
+
+    .oa-table { width:100%; border-collapse:collapse; font-size:13.5px; }
+    .oa-table th { background:var(--azul-oscuro); color:#fff; padding:10px 14px; text-align:left; font-weight:600; }
+    .oa-table td { padding:10px 14px; border-bottom:1px solid var(--borde); color:var(--gris-texto); vertical-align:top; line-height:1.6; }
+    .oa-table tr:last-child td { border-bottom:none; }
+    .oa-table tr:nth-child(even) td { background:var(--gris-claro); }
+    .oa-num { font-weight:700; color:var(--azul-acento); white-space:nowrap; }
+
+    .modelos-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; margin-top:4px; }
+    .modelo-item { background:var(--gris-claro); border:1px solid var(--borde); border-radius:10px; padding:14px 16px; font-size:13.5px; color:var(--azul-oscuro); font-weight:500; line-height:1.5; }
+
+    .aviso { font-size:13px; color:#856404; background:#fff3cd; border-radius:8px; padding:10px 14px; margin-top:12px; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="../index.html" class="header-logo">SO</a>
+      <a href="../index.html" class="header-title">
+        Sesiones Orientativas IV
+        <span>SEDPEM · IV Seminario EDPEM · UBB 2026</span>
+      </a>
+      <nav class="header-nav">
+        <a href="../index.html">← Todos los módulos</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="modulo-hero">
+    <div class="modulo-hero-inner">
+      <div class="breadcrumb">
+        <a href="../index.html">Inicio</a>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-current">Módulo 01</span>
+      </div>
+      <div class="modulo-hero-num">Módulo 01 · Sesión 01 · 06-04-2026 · 15:40–17:00</div>
+      <h1>Análisis de Recursos Educativos Anteriores y Planeación de Actividades</h1>
+      <p>Socializar el enfoque del Espacio de Interacción Didáctica, analizar recursos del III Seminario EDPEM y proponer actividades vinculadas a modelos de ecuaciones diferenciales y el currículo de educación media.</p>
+    </div>
+  </section>
+
+  <div class="capsulas-container">
+
+    <!-- ─── CÁPSULA 1 ─────────────────────────────────────── -->
+    <article class="capsula">
+      <div class="capsula-header">
+        <div class="capsula-num">1</div>
+        <div class="capsula-titulo">Objetivo general y estructura de la sesión</div>
+      </div>
+      <div class="capsula-body">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🎯</div> Objetivo de la sesión (OA1)</div>
+          <p>Socializar el enfoque de las actividades junto al análisis de recursos educativos aplicados en proyectos anteriores para esclarecer el propósito del <strong>Espacio de Interacción Didáctica</strong>.</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📚</div> Objetivo general del EID</div>
+          <p>Promover un espacio de interacción didáctica en el que las y los estudiantes de Pedagogía en Educación Matemática presenten y apliquen recursos educativos innovadores asociados a sus proyectos de ecuaciones diferenciales, incorporando herramientas tecnológicas y vinculando estos modelos con conceptos matemáticos del currículo de educación media, con el propósito de fomentar un aprendizaje significativo a través de la Matemática Aplicada.</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">⚠️</div> Aspectos clave del EID</div>
+          <ol>
+            <li>Mostrar una actitud de compromiso con la óptima ejecución de las actividades del seminario.</li>
+            <li><strong>No se puede realizar una clase tradicional.</strong> Se debe promover un ambiente de participación y reflexión en el aula.</li>
+            <li>Elaborar una planificación detallada para fortalecer competencias docentes y garantizar la correcta implementación.</li>
+            <li>Elaborar recursos didácticos interactivos de carácter innovador.</li>
+          </ol>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🕐</div> Estructura de la sesión</div>
+
+          <div class="actividad-card inicio">
+            <div class="act-header"><span class="act-badge inicio">Inicio</span><span class="act-tiempo">⏱ 15:40–15:55</span></div>
+            <div class="act-titulo">Saludo, asistencia y lluvia de ideas (Actividad 0)</div>
+            <div class="act-desc">Recepción del material impreso, lectura del objetivo de la sesión y análisis de los propósitos del seminario.</div>
+          </div>
+
+          <div class="actividad-card">
+            <div class="act-header"><span class="act-badge desarrollo">Desarrollo</span><span class="act-tiempo">⏱ 15:55–16:25</span></div>
+            <div class="act-titulo">Análisis de dos recursos del III SEDPEM (Actividades 01 y 02)</div>
+            <div class="act-desc">"La Matemática en la Propagación de Enfermedades" y "Matemáticas Contra el Cáncer" — 15 min cada uno.</div>
+          </div>
+
+          <div class="actividad-card">
+            <div class="act-header"><span class="act-badge desarrollo">Desarrollo</span><span class="act-tiempo">⏱ 16:25–16:55</span></div>
+            <div class="act-titulo">Contenidos curriculares + formación de grupos + propuesta de actividades (Actividades 03–05)</div>
+            <div class="act-desc">Revisión de OA del electivo de Cálculo, grupos aleatorios, selección de modelo matemático y listado de actividades.</div>
+          </div>
+
+          <div class="actividad-card cierre">
+            <div class="act-header"><span class="act-badge cierre">Cierre</span><span class="act-tiempo">⏱ 16:55–17:00</span></div>
+            <div class="act-titulo">Dudas, Tarea N°1 y acceso a Overleaf</div>
+            <div class="act-desc">Dialogar sobre la Tarea N°1 y gestionar acceso a Overleaf para la Sesión N°2.</div>
+          </div>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- ─── CÁPSULA 2 ─────────────────────────────────────── -->
+    <article class="capsula">
+      <div class="capsula-header">
+        <div class="capsula-num">2</div>
+        <div class="capsula-titulo">Actividades 0, 01 y 02 — Lluvia de ideas y análisis de recursos didácticos</div>
+      </div>
+      <div class="capsula-body">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🎯</div> Objetivo</div>
+          <p>Activar conocimientos previos sobre planificación docente y analizar críticamente dos recursos educativos del III SEDPEM, identificando estructuras didácticas, evaluaciones y áreas de mejora.</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📚</div> Aprendizaje esperado</div>
+          <p>Las y los estudiantes identificarán las actividades de inicio, desarrollo y cierre de cada recurso, reconocerán los instrumentos de evaluación empleados y propondrán mejoras concretas a las actividades de cierre.</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📋</div> Instrucciones — Actividad 0: Lluvia de ideas (4 min)</div>
+          <p>Responde en la guía complementaria con argumento y nivel de interés (1–5 estrellas):</p>
+          <ol>
+            <li>¿Qué es el seminario para ti?</li>
+            <li>¿Tienes experiencia realizando clases?</li>
+            <li>¿Se podrá aplicar transposición didáctica a cualquier modelo matemático?</li>
+            <li>¿Tienes dominio para planificar tus clases?</li>
+          </ol>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📋</div> Instrucciones — Actividades 01 y 02: Análisis de recursos (15 min c/u)</div>
+          <p>Analiza cada recurso en 2 minutos y responde con tiempo cronometrado (1 min escrito + 30 seg oral por estudiante):</p>
+          <ol>
+            <li>¿El recurso respeta una estructura que complemente la correcta secuencia de una clase? (Argumenta)</li>
+            <li>Identifica las actividades de inicio, desarrollo y cierre del recurso.</li>
+            <li>¿Qué actividades permitieron evaluar de forma diagnóstica y formativa?</li>
+            <li>Considerando el uso de Geogebra / Matlab, ¿qué dificultades podrían haberse presentado?</li>
+            <li>Analizando el cierre, ¿qué mejorarías o qué instrumento adicional propondrías?</li>
+          </ol>
+          <p class="aviso"><strong>Observación:</strong> En ambas sesiones del III SEDPEM faltó una encuesta de reflexión al finalizar. Este es un área de mejora directa que se aborda en este seminario.</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📄</div> Documentos de la sesión (PDFs)</div>
+          <p style="font-size:13px;color:var(--gris-texto);margin-bottom:14px;">Revisa la presentación y la guía complementaria directamente aquí:</p>
+
+          <div class="pdf-tabs">
+            <button class="pdf-tab active" onclick="showPdf('pdf1',this)">📊 Presentación Sesión 01 (Anexo 01)</button>
+            <button class="pdf-tab" onclick="showPdf('pdf2',this)">📝 Guía Complementaria (Anexo 02)</button>
+          </div>
+          <div id="pdf1" class="pdf-panel active">
+            <iframe src="ANEXO_01_SESION_ORIENTATIVA_01.pdf" title="Presentación Sesión 01"></iframe>
+          </div>
+          <div id="pdf2" class="pdf-panel">
+            <iframe src="ANEXO_02_SESION_ORIENTATIVA_01.pdf" title="Guía Complementaria Sesión 01"></iframe>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+            <a href="ANEXO_01_SESION_ORIENTATIVA_01.pdf" target="_blank" class="btn-recurso secondary">📊 Descargar Anexo 01</a>
+            <a href="ANEXO_02_SESION_ORIENTATIVA_01.pdf" target="_blank" class="btn-recurso secondary">📝 Descargar Anexo 02</a>
+          </div>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- ─── CÁPSULA 3 ─────────────────────────────────────── -->
+    <article class="capsula">
+      <div class="capsula-header">
+        <div class="capsula-num">3</div>
+        <div class="capsula-titulo">Actividades 03–05 — Contenidos curriculares, grupos y propuesta de actividades</div>
+      </div>
+      <div class="capsula-body">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🎯</div> Objetivo</div>
+          <p>Analizar los OA del electivo de Límites, Derivadas e Integrales, formar grupos y construir un listado de actividades didácticas vinculadas a modelos de ecuaciones diferenciales.</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📚</div> Aprendizaje esperado</div>
+          <p>Las y los estudiantes seleccionarán 2 contenidos del currículo y propondrán actividades de inicio, desarrollo y cierre para enseñarlos en el contexto de un modelo de ecuaciones diferenciales, promoviendo activación de conocimientos previos, interacción y reflexión.</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📋</div> Actividad 03 — OA del electivo de Cálculo (5 min)</div>
+          <table class="oa-table">
+            <tr><th style="width:60px;">N°</th><th>Objetivo de Aprendizaje</th></tr>
+            <tr><td class="oa-num">OA1</td><td>Utilizar diversas formas de representación al argumentar acerca de la composición de funciones y la existencia de la función inversa.</td></tr>
+            <tr><td class="oa-num">OA2</td><td>Argumentar acerca de la existencia de límites en el infinito y en un punto para determinar convergencia y continuidad en contextos matemáticos y de la vida diaria.</td></tr>
+            <tr><td class="oa-num">OA3</td><td>Modelar situaciones o fenómenos que involucren rapidez instantánea de cambio y evaluar la necesidad de ajustar el modelo.</td></tr>
+            <tr><td class="oa-num">OA4</td><td>Resolver problemas de crecimiento o decrecimiento, concavidad, máximos, mínimos o puntos de inflexión a partir del cálculo de la primera y segunda derivada.</td></tr>
+            <tr><td class="oa-num">OA5</td><td>Modelar situaciones que involucren el concepto de integral como área bajo la curva en contextos matemáticos, de las ciencias y de la vida diaria.</td></tr>
+          </table>
+          <p style="font-size:12.5px;color:var(--gris-texto);margin-top:10px;">Las habilidades de <strong>Resolución de problemas, Modelar, Representar, Argumentar y Comunicar</strong> son transversales a todos los objetivos.</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📋</div> Actividad 04 — Grupos y elección de modelo (5 min)</div>
+          <p>Formaos en grupos de 3 personas de forma aleatoria. Elegid 2 OA del electivo y vincúlalos con uno de los siguientes modelos:</p>
+          <div class="modelos-grid">
+            <div class="modelo-item">🌡 Ley de Enfriamiento / Calentamiento de Newton</div>
+            <div class="modelo-item">📈 Ecuación Logística de Verhulst</div>
+            <div class="modelo-item">🧪 Modelo de Mezcla de dos tanques interconectados</div>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🔗</div> Página complementaria para explorar los modelos.</div>
+          <div class="botones-recursos">
+            <a href="https://complementomatematico.github.io/SESION_ORIENTATIVA/" target="_blank" class="btn-recurso">📝 Página complementaria</a>
+          </div>
+        </div>
+
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📋</div> Actividad 05 — Listado de actividades (20 min)</div>
+          <p>Construye un listado de actividades para <strong>presentar el modelo matemático sin profundizar en la ecuación diferencial</strong>, estructurado en tres momentos:</p>
+          <ol>
+            <li><strong>Inicio:</strong> Activación de conocimientos previos.</li>
+            <li><strong>Desarrollo:</strong> Actividades de interacción y alta participación.</li>
+            <li><strong>Cierre:</strong> Reflexión y contrastación del logro del OA.</li>
+          </ol>
+          <p style="margin-top:10px;">Al finalizar, reflexiona: ¿Qué recursos utilizaré? ¿Qué tan innovadoras y ejecutables son las actividades propuestas?</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🔗</div> Recursos de apoyo</div>
+          <div class="botones-recursos">
+            <a href="ANEXO_02_SESION_ORIENTATIVA_01.pdf" target="_blank" class="btn-recurso">📝 Guía Complementaria</a>
+            <a href="https://www.curriculumnacional.cl" target="_blank" class="btn-recurso secondary">🌐 Currículum Nacional</a>
+            <a href="https://www.overleaf.com" target="_blank" class="btn-recurso secondary">📄 Overleaf (LaTeX)</a>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        
+
+      </div>
+    </article>
+
+  </div>
+
+  <div class="nav-modulos">
+    <a href="../index.html" class="nav-btn">← Volver al inicio</a>
+    <a href="modulo-02.html" class="nav-btn">Módulo 02 →</a>
+  </div>
+
+  <footer class="site-footer">
+    <strong>Sesiones Orientativas IV · SEDPEM</strong> &nbsp;·&nbsp; Módulo 01 · Prof. Bastiani Calabrano · UBB 2026
+  </footer>
+
+  <script>
+    function showPdf(id, btn) {
+      document.querySelectorAll('.pdf-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.pdf-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>

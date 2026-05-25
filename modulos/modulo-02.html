@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 02 – Sesiones Orientativas IV SEDPEM</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .pdf-tabs { display:flex; gap:8px; margin-bottom:0; flex-wrap:wrap; }
+    .pdf-tab {
+      background:transparent; border:1.5px solid var(--borde);
+      color:var(--gris-texto); font-size:13px; font-weight:500;
+      padding:8px 18px; border-radius:10px 10px 0 0; cursor:pointer;
+      transition:all .2s; font-family:'Inter',sans-serif;
+    }
+    .pdf-tab:hover { background:var(--gris-claro); color:var(--azul-oscuro); }
+    .pdf-tab.active { background:var(--azul-oscuro); color:#fff; border-color:var(--azul-oscuro); }
+    .pdf-panel { display:none; border:1.5px solid var(--borde); border-radius:0 12px 12px 12px; overflow:hidden; background:#f0f0f0; }
+    .pdf-panel.active { display:block; }
+    .pdf-panel iframe { width:100%; height:580px; border:none; display:block; }
+
+    .actividad-card {
+      background:var(--gris-claro); border:1px solid var(--borde);
+      border-left:4px solid var(--azul-acento); border-radius:12px;
+      padding:18px 22px; margin-bottom:14px;
+    }
+    .actividad-card.inicio { border-left-color:#1d9e75; }
+    .actividad-card.cierre { border-left-color:#993c1d; }
+    .act-header { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .act-badge { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:3px 10px; border-radius:999px; }
+    .act-badge.inicio  { background:#e1f5ee; color:#0f6e56; }
+    .act-badge.desarrollo { background:#e8f0fe; color:#185fa5; }
+    .act-badge.cierre  { background:#faece7; color:#993c1d; }
+    .act-tiempo { margin-left:auto; font-size:12px; color:var(--gris-texto); font-weight:500; }
+    .act-titulo { font-family:'Syne',sans-serif; font-size:14.5px; font-weight:700; color:var(--azul-oscuro); margin-bottom:4px; }
+    .act-desc { font-size:13.5px; color:var(--gris-texto); line-height:1.65; }
+
+    .tarea-box { background:linear-gradient(135deg,var(--azul-oscuro),var(--azul-medio)); border-radius:16px; padding:28px; color:#fff; margin-top:8px; }
+    .tarea-box h4 { font-family:'Syne',sans-serif; font-size:17px; font-weight:800; color:var(--dorado-claro); margin-bottom:14px; }
+    .tarea-box p, .tarea-box li { font-size:14px; color:rgba(255,255,255,.82); line-height:1.7; }
+    .tarea-box ol { padding-left:20px; }
+    .tarea-box li { margin-bottom:6px; }
+    .tarea-box strong { color:#fff; }
+    .tarea-fecha { display:inline-flex; align-items:center; gap:8px; background:rgba(240,165,0,.2); border:1px solid rgba(240,165,0,.4); color:var(--dorado-claro); font-size:12px; font-weight:600; padding:5px 14px; border-radius:999px; margin-bottom:16px; }
+
+    .bloom-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; margin-top:4px; }
+    .bloom-item { background:var(--gris-claro); border:1px solid var(--borde); border-radius:10px; padding:14px 16px; font-size:13.5px; color:var(--azul-oscuro); font-weight:500; line-height:1.5; }
+    .bloom-item strong { display:block; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--gris-texto); margin-bottom:4px; }
+
+    .aviso { font-size:13px; color:#856404; background:#fff3cd; border-radius:8px; padding:10px 14px; margin-top:12px; }
+    .aviso-azul { font-size:13px; color:#0c4a8a; background:#e8f0fe; border-radius:8px; padding:10px 14px; margin-top:12px; }
+
+    .plantilla-demo {
+      border: 1.5px solid var(--borde);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #f8f9fa;
+      margin-top: 6px;
+    }
+    .plantilla-demo-bar {
+      background: var(--azul-oscuro);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #fff;
+      font-weight: 600;
+    }
+    .plantilla-demo-bar span { opacity:.7; font-weight:400; font-size:12px; }
+    .plantilla-demo iframe {
+      width: 100%;
+      height: 520px;
+      border: none;
+      display: block;
+    }
+
+    .paso-card {
+      background: var(--gris-claro);
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .paso-num {
+      background: var(--azul-oscuro);
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .paso-content { flex: 1; }
+    .paso-titulo { font-weight: 700; color: var(--azul-oscuro); font-size: 14px; margin-bottom: 4px; }
+    .paso-desc { font-size: 13.5px; color: var(--gris-texto); line-height: 1.6; }
+    .paso-code {
+      font-family: 'Courier New', monospace;
+      background: #1e1e2e;
+      color: #cdd6f4;
+      font-size: 12.5px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-top: 8px;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    .paso-code .kw { color: #89b4fa; }
+    .paso-code .str { color: #a6e3a1; }
+    .paso-code .cm { color: #6c7086; font-style:italic; }
+    .paso-code .br { color: #f38ba8; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="../index.html" class="header-logo">SO</a>
+      <a href="../index.html" class="header-title">
+        Sesiones Orientativas IV
+        <span>SEDPEM · IV Seminario EDPEM · UBB 2026</span>
+      </a>
+      <nav class="header-nav">
+        <a href="../index.html">← Todos los módulos</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="modulo-hero">
+    <div class="modulo-hero-inner">
+      <div class="breadcrumb">
+        <a href="../index.html">Inicio</a>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-current">Módulo 02</span>
+      </div>
+      <div class="modulo-hero-num">Módulo 02 · Sesión 02 · 13-04-2026 · 15:40–17:00</div>
+      <h1>Planificación del EID y construcción de recursos educativos</h1>
+      <p>Planificar la sesión de clase y trabajar en la construcción de los recursos educativos a implementar en el Espacio de Interacción Didáctica, utilizando la plantilla LaTeX institucional disponible en línea.</p>
+    </div>
+  </section>
+
+  <div class="capsulas-container">
+
+    <!-- ─── CÁPSULA 1 ─────────────────────────────────────── -->
+    <article class="capsula">
+      <div class="capsula-header">
+        <div class="capsula-num">1</div>
+        <div class="capsula-titulo">Objetivo general y estructura de la sesión</div>
+      </div>
+      <div class="capsula-body">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🎯</div> Objetivo de la sesión (OA2)</div>
+          <p>Planificar una sesión de clase y trabajar en la construcción de los recursos educativos a implementar en el <strong>Espacio de Interacción Didáctica</strong>.</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🕐</div> Estructura de la sesión</div>
+
+          <div class="actividad-card inicio">
+            <div class="act-header"><span class="act-badge inicio">Inicio</span><span class="act-tiempo">⏱ 15:40–15:55</span></div>
+            <div class="act-titulo">Saludo, dudas y análisis de contexto de planificación (Actividad 0)</div>
+            <div class="act-desc">Recepción del material impreso, lectura del objetivo de la sesión y análisis de los tres contextos de planificación docente.</div>
+          </div>
+
+          <div class="actividad-card">
+            <div class="act-header"><span class="act-badge desarrollo">Desarrollo</span><span class="act-tiempo">⏱ 15:55–16:10</span></div>
+            <div class="act-titulo">Revisión de planificación modelo (Actividad 01)</div>
+            <div class="act-desc">Analizar la planificación modelo del Prof. Bastiani Calabrano para conectar un modelo matemático con contenidos y habilidades de nivel medio.</div>
+          </div>
+
+          <div class="actividad-card">
+            <div class="act-header"><span class="act-badge desarrollo">Desarrollo</span><span class="act-tiempo">⏱ 16:10–16:35</span></div>
+            <div class="act-titulo">Selección de contenidos y construcción de objetivos (Actividad 02)</div>
+            <div class="act-desc">Selección individual de 2 contenidos del listado (Límites, Derivadas e Integrales), formación de grupos de 3 y construcción de 3 objetivos de aprendizaje alineados a la Taxonomía de Bloom.</div>
+          </div>
+
+          <div class="actividad-card cierre">
+            <div class="act-header"><span class="act-badge cierre">Cierre</span><span class="act-tiempo">⏱ 16:35–17:00</span></div>
+            <div class="act-titulo">Tarea N°2, uso de Claude y construcción de páginas web</div>
+            <div class="act-desc">Aclarar dudas sobre la Tarea N°2, dialogar sobre el uso de Claude y construcción de páginas web con HTML + CSS + JS e IA, y acceso a GitHub Pages para publicación gratuita.</div>
+          </div>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- ─── CÁPSULA 2 ─────────────────────────────────────── -->
+    <article class="capsula">
+      <div class="capsula-header">
+        <div class="capsula-num">2</div>
+        <div class="capsula-titulo">Actividad 0 — Análisis de contextos de planificación</div>
+      </div>
+      <div class="capsula-body">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🎯</div> Objetivo</div>
+          <p>Reflexionar sobre las diferencias entre los distintos contextos en los que se puede planificar una clase, reconociendo las particularidades del Espacio de Interacción Didáctica como un entorno con recursos disponibles y audiencia mixta.</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📚</div> Aprendizaje esperado</div>
+          <p>Las y los docentes identificarán las diferencias clave entre planificar para una clase teórica, para un aula real y para el EID, ajustando su propuesta de planificación a las condiciones específicas del seminario.</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📋</div> Instrucciones — Actividad 0: Análisis de contextos (4 min)</div>
+          <p>Lee la tabla comparativa de los tres tipos de planificación y reflexiona sobre las siguientes preguntas:</p>
+          <ol>
+            <li>¿En cuál de los tres contextos es más exigente planificar? ¿Por qué?</li>
+            <li>¿Qué características del EID lo diferencian de una clase convencional?</li>
+            <li>¿Qué ventajas y desafíos presenta el carácter <strong>innovador</strong> del EID?</li>
+          </ol>
+          <div class="aviso-azul">🔍 <strong>Recuerda:</strong> El EID no será una clase tradicional. Se espera innovación, recursos disponibles sin restricciones y una audiencia que incluye estudiantes de EM, docentes en ejercicio y estudiantes de Pedagogía en Matemática.</div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📄</div> Documentos de la sesión (PDF)</div>
+          <p style="font-size:13px;color:var(--gris-texto);margin-bottom:14px;">Revisa la presentación de la Sesión 02 directamente aquí:</p>
+
+          <div class="pdf-tabs">
+            <button class="pdf-tab active" onclick="showPdf('pdf1',this)">📊 Presentación Sesión 02 (Anexo 01)</button>
+          </div>
+          <div id="pdf1" class="pdf-panel active">
+            <iframe src="ANEXO_01_SESION_ORIENTATIVA_02.pdf" title="Presentación Sesión 02"></iframe>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+            <a href="ANEXO_01_SESION_ORIENTATIVA_02.pdf" target="_blank" class="btn-recurso secondary">📊 Descargar Anexo 01</a>
+          </div>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- ─── CÁPSULA 3 ─────────────────────────────────────── -->
+    <article class="capsula">
+      <div class="capsula-header">
+        <div class="capsula-num">3</div>
+        <div class="capsula-titulo">Actividad 02 — Selección de contenidos y construcción de objetivos con Taxonomía de Bloom</div>
+      </div>
+      <div class="capsula-body">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🎯</div> Objetivo</div>
+          <p>Seleccionar contenidos del currículo de Límites, Derivadas e Integrales y construir objetivos de aprendizaje bien formulados, alineados a la Taxonomía de Bloom y al objetivo general del EID.</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📚</div> Aprendizaje esperado</div>
+          <p>Las y los docentes construirán tres objetivos de aprendizaje coherentes con su modelo matemático, diferenciados en niveles cognitivos de la Taxonomía de Bloom y articulados con los contenidos seleccionados.</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📋</div> Instrucciones — Actividad 02 (25 min)</div>
+          <ol>
+            <li><strong>Individual (10 min):</strong> Selecciona 2 contenidos del listado entregado (uno de los marcados en rojo es obligatorio). Decide cuáles se priorizarán en tu planificación y cuáles quedarán para aprendizaje autónomo.</li>
+            <li><strong>Grupos de 3 (15 min):</strong> Formaos aleatoriamente. Analizad la Taxonomía de Bloom y construid tres objetivos de aprendizaje alineados al objetivo general del EID y a la temática de vuestra clase.</li>
+          </ol>
+          <p style="margin-top:10px;">Para la construcción de objetivos, utilizad la siguiente página de apoyo:</p>
+          <div style="margin-top:10px;">
+            <a href="https://tanicalabrano.github.io/GENERADOR_OA/" target="_blank" class="btn-recurso">🌐 Página complementaria — Generador de objetivos</a>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🧠</div> Niveles de la Taxonomía de Bloom (referencia)</div>
+          <div class="bloom-grid">
+            <div class="bloom-item"><strong>Nivel 1</strong>Recordar — Identificar, nombrar, listar, reconocer.</div>
+            <div class="bloom-item"><strong>Nivel 2</strong>Comprender — Explicar, describir, interpretar, clasificar.</div>
+            <div class="bloom-item"><strong>Nivel 3</strong>Aplicar — Usar, resolver, calcular, demostrar.</div>
+            <div class="bloom-item"><strong>Nivel 4</strong>Analizar — Comparar, diferenciar, organizar, examinar.</div>
+            <div class="bloom-item"><strong>Nivel 5</strong>Evaluar — Juzgar, criticar, argumentar, validar.</div>
+            <div class="bloom-item"><strong>Nivel 6</strong>Crear — Diseñar, construir, planificar, producir.</div>
+          </div>
+          <div class="aviso">⚠️ <strong>Importante:</strong> Al menos uno de los tres objetivos debe alcanzar el nivel 4 o superior para garantizar el carácter innovador del EID.</div>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- ─── CÁPSULA 4 ─────────────────────────────────────── -->
+    <article class="capsula">
+      <div class="capsula-header">
+        <div class="capsula-num">4</div>
+        <div class="capsula-titulo">Plantilla LaTeX del EID — Uso de la página web generadora</div>
+      </div>
+      <div class="capsula-body">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🎯</div> Objetivo</div>
+          <p>Aprender a utilizar la página web interactiva que genera automáticamente el código LaTeX de la planificación del EID, para luego compilarlo en Overleaf y obtener un PDF de formato profesional.</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📚</div> Aprendizaje esperado</div>
+          <p>Las y los docentes completarán todos los campos del formulario en línea, generarán el código <code>.tex</code> correspondiente a su planificación, lo importarán a Overleaf y compilarán exitosamente el PDF institucional del EID.</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🌐</div> Vista previa de la plantilla en línea</div>
+          <p style="font-size:13px;color:var(--gris-texto);margin-bottom:10px;">Puedes interactuar directamente con la página desde aquí, o abrirla en una nueva pestaña:</p>
+          <div class="plantilla-demo">
+            <div class="plantilla-demo-bar">
+              🔗 tanicalabrano.github.io/PLANTILLA_DE_PLANIFICACION_EID/
+              <span style="margin-left:auto;">Planificación EID · LaTeX Generator</span>
+            </div>
+            <iframe
+              src="https://tanicalabrano.github.io/PLANTILLA_DE_PLANIFICACION_EID/"
+              title="Plantilla LaTeX EID"
+              loading="lazy">
+            </iframe>
+          </div>
+          <div style="margin-top:12px;">
+            <a href="https://tanicalabrano.github.io/PLANTILLA_DE_PLANIFICACION_EID/" target="_blank" class="btn-recurso">🚀 Abrir en pestaña completa</a>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">📋</div> Instrucciones — Paso a paso</div>
+
+          <div class="paso-card">
+            <div class="paso-num">1</div>
+            <div class="paso-content">
+              <div class="paso-titulo">Accede a la página de la plantilla</div>
+              <div class="paso-desc">Visita <strong>tanicalabrano.github.io/PLANTILLA_DE_PLANIFICACION_EID/</strong> desde tu navegador (Chrome recomendado). La página cargará un formulario interactivo con todos los campos de la planificación.</div>
+            </div>
+          </div>
+
+          <div class="paso-card">
+            <div class="paso-num">2</div>
+            <div class="paso-content">
+              <div class="paso-titulo">Completa los datos del encabezado</div>
+              <div class="paso-desc">Ingresa tu nombre, el título de tu sesión, el modelo matemático elegido, la fecha y los objetivos de aprendizaje que construiste con tu grupo en la Actividad 02.</div>
+            </div>
+          </div>
+
+          <div class="paso-card">
+            <div class="paso-num">3</div>
+            <div class="paso-content">
+              <div class="paso-titulo">Completa los momentos de la clase</div>
+              <div class="paso-desc">Rellena cada bloque de actividades: <strong>Inicio</strong> (activación de conocimientos previos), <strong>Desarrollo</strong> (actividades de alta participación), y <strong>Cierre</strong> (reflexión y contrastación del OA). Indica los tiempos y recursos de cada momento.</div>
+            </div>
+          </div>
+
+          <div class="paso-card">
+            <div class="paso-num">4</div>
+            <div class="paso-content">
+              <div class="paso-titulo">Genera y copia el código .tex</div>
+              <div class="paso-desc">Haz clic en el botón <strong>"Generar LaTeX"</strong>. La página producirá automáticamente el código completo. Cópialo en su totalidad (Ctrl+A → Ctrl+C dentro del cuadro de código).</div>
+              <div class="paso-code"><span class="cm">% Ejemplo de lo que se genera automáticamente:</span>
+<span class="kw">\documentclass</span>[12pt,letterpaper]{article}
+<span class="kw">\usepackage</span>[spanish]{babel}
+<span class="kw">\usepackage</span>{geometry, booktabs, array, xcolor}
+<span class="cm">% ... resto del preámbulo institucional ...</span>
+<span class="kw">\begin</span>{<span class="br">document</span>}
+  <span class="kw">\maketitle</span>
+  <span class="cm">% Tus secciones generadas aquí</span>
+<span class="kw">\end</span>{<span class="br">document</span>}</div>
+            </div>
+          </div>
+
+          <div class="paso-card">
+            <div class="paso-num">5</div>
+            <div class="paso-content">
+              <div class="paso-titulo">Importa el código en Overleaf</div>
+              <div class="paso-desc">Ve a <strong>overleaf.com</strong>, crea un nuevo proyecto en blanco, borra el contenido del archivo <code>main.tex</code> y pega el código copiado. El preámbulo y los paquetes ya están incluidos automáticamente.</div>
+            </div>
+          </div>
+
+          <div class="paso-card">
+            <div class="paso-num">6</div>
+            <div class="paso-content">
+              <div class="paso-titulo">Compila y exporta tu PDF</div>
+              <div class="paso-desc">Presiona el botón verde <strong>"Recompile"</strong> (o Ctrl+Enter). Overleaf procesará el código y generará tu planificación en PDF con el formato institucional. Descárgala desde el ícono de flecha en el panel derecho.</div>
+            </div>
+          </div>
+
+          <div class="aviso-azul">💡 <strong>Consejo:</strong> Si Overleaf muestra errores al compilar, revisa que no haya caracteres especiales como tildes o ñ fuera de los campos generados por la plantilla. El código incluye los paquetes necesarios para el español, pero texto pegado desde Word puede traer caracteres inesperados.</div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="capsula-bloque">
+          <div class="bloque-label"><div class="bloque-label-icon">🔗</div> Recursos de apoyo</div>
+          <div class="botones-recursos">
+            <a href="https://tanicalabrano.github.io/PLANTILLA_DE_PLANIFICACION_EID/" target="_blank" class="btn-recurso">🌐 Plantilla EID en línea</a>
+            <a href="https://www.overleaf.com" target="_blank" class="btn-recurso secondary">📄 Overleaf (editor LaTeX)</a>
+            <a href="https://www.dropbox.com/scl/fo/iug0b0ygu1jlfxlextm1b/ADG_98grXQCXV-ZtAwHkw9s?rlkey=4kknzs8i8xogs203qd1yycdf9&st=dznlv282&dl=0" target="_blank" class="btn-recurso secondary">🎬 Videos de guía Overleaf</a>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        
+
+      </div>
+    </article>
+
+  </div>
+
+  <div class="nav-modulos">
+    <a href="modulo-01.html" class="nav-btn">← Módulo 01</a>
+    <a href="modulo-03.html" class="nav-btn">Módulo 03 →</a>
+  </div>
+
+  <footer class="site-footer">
+    <strong>Sesiones Orientativas IV · SEDPEM</strong> &nbsp;·&nbsp; Módulo 02 · Prof. Bastiani Calabrano · UBB 2026
+  </footer>
+
+  <script>
+    function showPdf(id, btn) {
+      document.querySelectorAll('.pdf-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.pdf-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>

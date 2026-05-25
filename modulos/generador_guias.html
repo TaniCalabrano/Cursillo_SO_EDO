@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Generador de Guías de Trabajo — .tex / HTML</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:#003B75;--blue2:#1a5fa8;--blue-light:#e8f1fb;--blue-mid:#b8cce8;
+  --gray-bg:#f0f3f8;--gray-border:#dde3ee;--gray-muted:#8892a4;
+  --text:#1a1d2e;--text-soft:#4a5068;
+  --radius:10px;--radius-sm:6px;
+  --shadow:0 2px 12px rgba(0,59,117,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Space Grotesk',system-ui,sans-serif;font-size:13px;color:var(--text);background:var(--gray-bg);line-height:1.6}
+.app-header{background:var(--blue);color:#fff;padding:13px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 2px 8px rgba(0,0,0,0.18)}
+.app-header h1{font-size:15px;font-weight:600;flex:1;letter-spacing:.01em}
+.app-header .ver{font-size:10px;opacity:.65;background:rgba(255,255,255,0.15);padding:2px 9px;border-radius:20px}
+.btn-hdr{padding:7px 15px;border-radius:var(--radius-sm);font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid;transition:all .15s;font-family:inherit}
+.btn-tex{background:#fff;color:var(--blue);border-color:#fff}.btn-tex:hover{background:#e8f1fb}
+.btn-html-exp{background:rgba(255,255,255,0.13);color:#fff;border-color:rgba(255,255,255,0.45)}.btn-html-exp:hover{background:rgba(255,255,255,0.22)}
+.app-body{display:flex;height:calc(100vh - 52px)}
+.sidebar{width:205px;min-width:205px;background:#fff;border-right:1px solid var(--gray-border);padding:14px 0;overflow-y:auto;flex-shrink:0}
+.sidebar-ttl{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-muted);padding:0 15px 7px}
+.nav-item{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:9px 15px;border:none;background:none;font-size:12px;cursor:pointer;color:var(--text-soft);border-left:3px solid transparent;transition:all .12s;font-family:inherit}
+.nav-item:hover{background:var(--gray-bg);color:var(--text)}
+.nav-item.active{background:var(--blue-light);color:var(--blue);border-left-color:var(--blue);font-weight:600}
+.nav-item .ni{font-size:14px;width:17px;text-align:center}
+.main{flex:1;overflow-y:auto;padding:22px 26px}
+.sec{display:none}
+.sec.active{display:block;animation:fadeIn .18s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.sec-title{font-size:15px;font-weight:600;color:var(--blue);margin-bottom:16px;padding-bottom:9px;border-bottom:2px solid var(--blue-light)}
+.prog-bar{height:4px;background:var(--blue-mid);border-radius:2px;margin-bottom:18px;overflow:hidden}
+.prog-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .35s}
+.fg{margin-bottom:13px}
+.fg label{display:block;font-size:10px;font-weight:600;letter-spacing:.05em;color:var(--gray-muted);margin-bottom:4px;text-transform:uppercase}
+input[type=text],textarea,select{width:100%;padding:8px 11px;border:1.5px solid var(--gray-border);border-radius:var(--radius-sm);background:#fff;color:var(--text);font-size:12px;font-family:inherit;transition:border-color .12s,box-shadow .12s}
+input[type=text]:focus,textarea:focus,select:focus{outline:none;border-color:var(--blue2);box-shadow:0 0 0 3px rgba(0,59,117,0.09)}
+textarea{resize:vertical;min-height:68px;line-height:1.55}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
+/* LIST EDITOR */
+.list-ed{border:1.5px solid var(--gray-border);border-radius:var(--radius-sm);padding:9px;background:var(--gray-bg)}
+.li-row{display:flex;gap:6px;margin-bottom:6px;align-items:center}
+.li-row:last-child{margin-bottom:0}
+.li-row input{flex:1;background:#fff}
+.btn-del{background:none;border:1px solid #e0e4eb;border-radius:4px;width:25px;height:25px;cursor:pointer;font-size:14px;color:#aaa;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.btn-del:hover{background:#fee2e2;border-color:#fca5a5;color:#c00}
+.btn-add{background:none;border:1.5px dashed var(--blue-mid);border-radius:var(--radius-sm);padding:6px 9px;font-size:11px;cursor:pointer;color:var(--blue2);width:100%;margin-top:6px;font-family:inherit;transition:all .12s;text-align:center}
+.btn-add:hover{background:var(--blue-light);border-style:solid}
+/* LOGOS */
+.logo-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;margin-bottom:16px}
+.logo-slot{}
+.logo-slot-lbl{font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--gray-muted);margin-bottom:4px}
+.logo-zone{border:2px dashed var(--blue-mid);border-radius:var(--radius-sm);padding:13px 9px;text-align:center;cursor:pointer;background:#fff;transition:all .15s;position:relative;min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.logo-zone:hover{border-color:var(--blue2);background:var(--blue-light)}
+.logo-zone.has-img{border-style:solid;border-color:var(--blue-mid)}
+.logo-zone img{max-width:100%;max-height:52px;object-fit:contain}
+.logo-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.logo-lbl{font-size:10px;color:var(--gray-muted);pointer-events:none}
+.logo-sub{font-size:9px;color:var(--blue2);pointer-events:none}
+.logo-clr{position:absolute;top:3px;right:3px;background:#fee2e2;border:1px solid #fca5a5;border-radius:3px;width:19px;height:19px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#c00;z-index:2;pointer-events:auto}
+/* TIPOS */
+.tipo-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.tipo-btn{padding:5px 12px;border-radius:20px;border:1.5px solid var(--gray-border);background:#fff;font-size:11px;cursor:pointer;color:var(--text-soft);font-family:inherit;transition:all .12s}
+.tipo-btn:hover{border-color:var(--blue2);color:var(--blue)}
+.tipo-btn.sel{background:var(--blue);color:#fff;border-color:var(--blue)}
+/* CIERRE */
+.cierre-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.cierre-opt{background:#fff;border:1.5px solid var(--gray-border);border-radius:var(--radius-sm);padding:11px 10px;cursor:pointer;transition:all .12s;text-align:center}
+.cierre-opt:hover{border-color:var(--blue2);background:var(--blue-light)}
+.cierre-opt.sel{border-color:var(--blue);background:var(--blue-light)}
+.cierre-opt .co-ico{font-size:22px;display:block;margin-bottom:4px}
+.cierre-opt .co-lbl{font-size:11px;font-weight:600;color:var(--text)}
+.cierre-opt .co-desc{font-size:10px;color:var(--gray-muted);margin-top:2px}
+/* ENFOQUES */
+.enf-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:5px}
+.enf-lbl{font-size:11px;padding:3px 9px;border-radius:20px;cursor:pointer;border:1px solid var(--gray-border);background:#fff;color:var(--text-soft);font-family:inherit;display:inline-flex;align-items:center;gap:4px;user-select:none}
+.enf-lbl input{cursor:pointer}
+/* ACT BLOCK */
+.act-block{background:#fff;border:1.5px solid var(--gray-border);border-radius:var(--radius);padding:15px;margin-bottom:14px}
+.act-block-hdr{margin-bottom:11px}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:600;color:#fff;letter-spacing:.02em}
+.b-dev{background:#003B75}
+.b-inicio{background:#1a7a4a}
+.b-mot{background:#5b21b6}
+.b-cierre{background:#7a3a00}
+/* INFO BOX */
+.info-box{background:var(--blue-light);border-left:3px solid var(--blue2);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:9px 13px;font-size:11px;color:var(--blue);margin-bottom:14px;line-height:1.55}
+/* NAV */
+.sec-nav{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;border-top:1px solid var(--gray-border);padding-top:13px}
+.btn-prev,.btn-next{padding:8px 17px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid;transition:all .15s;font-family:inherit}
+.btn-prev{background:#fff;color:var(--text-soft);border-color:var(--gray-border)}.btn-prev:hover{background:var(--gray-bg)}
+.btn-next{background:var(--blue);color:#fff;border-color:var(--blue)}.btn-next:hover{background:var(--blue2)}
+/* TEX */
+.tex-wrap{background:#1e1e2e;border-radius:var(--radius);overflow:hidden;margin-bottom:14px}
+.tex-bar{background:#2d2d42;padding:8px 14px;display:flex;align-items:center;gap:8px}
+.tex-dots{display:flex;gap:5px}
+.td{width:10px;height:10px;border-radius:50%}
+.td1{background:#ff5f57}.td2{background:#febc2e}.td3{background:#28c840}
+.tex-bar span{font-size:11px;color:#888;flex:1;font-family:'JetBrains Mono',monospace}
+.btn-copy{background:rgba(255,255,255,0.1);color:#ccc;border:1px solid rgba(255,255,255,0.2);border-radius:4px;padding:4px 10px;font-size:10px;cursor:pointer;font-family:inherit}
+.btn-copy:hover{background:rgba(255,255,255,0.22)}
+pre.tex-code{padding:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#cdd6f4;white-space:pre;overflow-x:auto;max-height:420px;overflow-y:auto;line-height:1.75}
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:#1a1d2e;color:#fff;padding:9px 16px;border-radius:var(--radius);font-size:12px;opacity:0;transform:translateY(7px);transition:all .25s;pointer-events:none;z-index:9999;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>🎓 Generador de Guías de Trabajo <span class="ver">.tex + HTML</span></h1>
+  <button class="btn-hdr btn-html-exp" onclick="exportHTML()">⬇ Exportar Guía HTML</button>
+  <button class="btn-hdr btn-tex" onclick="exportTex()">⬇ Descargar .tex</button>
+</header>
+
+<div class="app-body">
+<nav class="sidebar">
+  <div class="sidebar-ttl">Secciones</div>
+  <button class="nav-item active" onclick="goSec(0,this)"><span class="ni">🏛</span> 01 · Institucional</button>
+  <button class="nav-item" onclick="goSec(1,this)"><span class="ni">📋</span> 02 · Datos sesión</button>
+  <button class="nav-item" onclick="goSec(2,this)"><span class="ni">💡</span> 03 · Inicio</button>
+  <button class="nav-item" onclick="goSec(3,this)"><span class="ni">📐</span> 04 · Motivación</button>
+  <button class="nav-item" onclick="goSec(4,this)"><span class="ni">🔬</span> 05 · Desarrollo</button>
+  <button class="nav-item" onclick="goSec(5,this)"><span class="ni">🎯</span> 06 · Cierre</button>
+  <button class="nav-item" onclick="goSec(6,this)"><span class="ni">{ }</span> Ver / Exportar .tex</button>
+</nav>
+
+<main class="main">
+
+<!-- 01 INSTITUCIONAL -->
+<div class="sec active" id="s0">
+  <div class="sec-title">01 · Aspectos Institucionales</div>
+  <div class="prog-bar"><div class="prog-fill" style="width:16%"></div></div>
+  <div class="info-box">Sube los logos o escribe el nombre del archivo para Overleaf. Luego completa el título, equipo y datos institucionales.</div>
+
+  <div class="fg"><label>Logos institucionales (máx. 3)</label>
+  <div class="logo-row">
+    <div class="logo-slot">
+      <div class="logo-slot-lbl">Logo 1 — Izquierda</div>
+      <div class="logo-zone" id="lz0">
+        <input type="file" accept="image/*" onchange="handleLogo(0,event)">
+        <span style="font-size:22px">🖼</span>
+        <span class="logo-lbl">Click para subir</span>
+        <span class="logo-sub">PNG / JPG / SVG</span>
+      </div>
+      <div class="fg" style="margin-top:6px"><label>Nombre archivo (.tex)</label><input type="text" id="logo0name" placeholder="logo_ubb.png"></div>
+    </div>
+    <div class="logo-slot">
+      <div class="logo-slot-lbl">Logo 2 — Centro</div>
+      <div class="logo-zone" id="lz1">
+        <input type="file" accept="image/*" onchange="handleLogo(1,event)">
+        <span style="font-size:22px">🖼</span>
+        <span class="logo-lbl">Click para subir</span>
+        <span class="logo-sub">PNG / JPG / SVG</span>
+      </div>
+      <div class="fg" style="margin-top:6px"><label>Nombre archivo (.tex)</label><input type="text" id="logo1name" placeholder="logo_S.jpg"></div>
+    </div>
+    <div class="logo-slot">
+      <div class="logo-slot-lbl">Logo 3 — Derecha</div>
+      <div class="logo-zone" id="lz2">
+        <input type="file" accept="image/*" onchange="handleLogo(2,event)">
+        <span style="font-size:22px">🖼</span>
+        <span class="logo-lbl">Click para subir</span>
+        <span class="logo-sub">PNG / JPG / SVG</span>
+      </div>
+      <div class="fg" style="margin-top:6px"><label>Nombre archivo (.tex)</label><input type="text" id="logo2name" placeholder="logo_CMM.png"></div>
+    </div>
+  </div></div>
+
+  <div class="fg"><label>Título de la Guía</label>
+    <input type="text" id="titulo" placeholder="La Matemática en la Propagación de Enfermedades">
+  </div>
+  <div class="fg"><label>Equipo de Docencia (nombres separados por coma)</label>
+    <input type="text" id="equipo" placeholder="Nom_01  Ape_01, Nom_02  Ape_02, Nom_03  Ape_03">
+  </div>
+  <div class="fg"><label>Nombre del Evento / Seminario</label>
+    <input type="text" id="evento" placeholder="IV Seminario Estudiantil de Ecuaciones Diferenciales y Educación Matemática">
+  </div>
+  <div class="fg"><label>Subtítulo del evento (opcional)</label>
+    <input type="text" id="evento_sub" placeholder="Vinculación con el Medio para el Fortalecimiento de la Enseñanza y las Matemáticas Aplicadas">
+  </div>
+  <div class="row2">
+    <div class="fg"><label>Facultad(es)</label>
+      <input type="text" id="facultad" placeholder="Facultad de Ciencias — Facultad de Educación y Humanidades">
+    </div>
+    <div class="fg"><label>Universidad</label>
+      <input type="text" id="universidad" placeholder="Universidad del Bío-Bío">
+    </div>
+  </div>
+  <div class="row3">
+    <div class="fg"><label>Año</label><input type="text" id="anio" placeholder="2026"></div>
+    <div class="fg"><label>Cabecera izquierda</label><input type="text" id="lhead" placeholder="Universidad del Bío-Bío"></div>
+    <div class="fg"><label>Cabecera derecha</label><input type="text" id="rhead" placeholder="Espacio de Interacción Didáctica"></div>
+  </div>
+
+  <div class="sec-nav">
+    <button class="btn-next" onclick="goSec(1,null)">Siguiente →</button>
+  </div>
+</div>
+
+<!-- 02 DATOS SESIÓN -->
+<div class="sec" id="s1">
+  <div class="sec-title">02 · Datos Generales de la Sesión</div>
+  <div class="prog-bar"><div class="prog-fill" style="width:33%"></div></div>
+
+  <div class="fg"><label>Objetivo de la Sesión</label>
+    <textarea id="obj_sesion" placeholder="Analizar gráficas de funciones que representan la propagación de enfermedades de una población cerrada por medio de modelos compartimentales de manera participativa y reflexiva."></textarea>
+  </div>
+  <div class="fg"><label>Agenda del Día</label>
+    <div class="list-ed" id="agenda-list">
+      <div class="li-row"><input type="text" value="Lluvia de ideas"><button class="btn-del" onclick="delItem(this)">×</button></div>
+      <div class="li-row"><input type="text" value="Motivación: Modelo SIR"><button class="btn-del" onclick="delItem(this)">×</button></div>
+      <div class="li-row"><input type="text" value="Problema Parte I"><button class="btn-del" onclick="delItem(this)">×</button></div>
+      <div class="li-row"><input type="text" value="Problema Parte II"><button class="btn-del" onclick="delItem(this)">×</button></div>
+      <div class="li-row"><input type="text" value="Espacio de reflexión e interacción"><button class="btn-del" onclick="delItem(this)">×</button></div>
+    </div>
+    <button class="btn-add" onclick="addItem('agenda-list')">+ Agregar ítem</button>
+  </div>
+  <div class="row2">
+    <div class="fg"><label>URL Guía Digital (para QR)</label>
+      <input type="text" id="url_qr" placeholder="https://tanicalabrano.github.io/GUIA_01_SV/">
+    </div>
+    <div class="fg"><label>Logo dentro del QR (nombre archivo)</label>
+      <input type="text" id="logo_qr" placeholder="LOG_SEMINARIO.png">
+    </div>
+  </div>
+  <div class="fg"><label>Etiqueta bajo el QR</label>
+    <input type="text" id="qr_label" placeholder="Guía interactiva en línea">
+  </div>
+
+  <div class="sec-nav">
+    <button class="btn-prev" onclick="goSec(0,null)">← Anterior</button>
+    <button class="btn-next" onclick="goSec(2,null)">Siguiente →</button>
+  </div>
+</div>
+
+<!-- 03 INICIO -->
+<div class="sec" id="s2">
+  <div class="sec-title">03 · Actividad Inicial</div>
+  <div class="prog-bar"><div class="prog-fill" style="width:50%"></div></div>
+  <div class="info-box">Selecciona el tipo de actividad de inicio y configura las preguntas o ítems.</div>
+
+  <div class="fg"><label>Tipo de actividad inicial</label>
+    <div class="tipo-row">
+      <button class="tipo-btn sel" onclick="selTipo(this,'lluvia')">💭 Lluvia de ideas</button>
+      <button class="tipo-btn" onclick="selTipo(this,'debate')">🗣 Debate</button>
+      <button class="tipo-btn" onclick="selTipo(this,'caso')">📖 Estudio de caso</button>
+      <button class="tipo-btn" onclick="selTipo(this,'juego')">🎮 Juego / Ruleta</button>
+      <button class="tipo-btn" onclick="selTipo(this,'otro')">✏️ Otro</button>
+    </div>
+    <input type="hidden" id="tipo_inicio" value="lluvia">
+  </div>
+  <div class="fg"><label>Título de la sección</label>
+    <input type="text" id="inicio_titulo" placeholder="Lluvia de Ideas">
+  </div>
+  <div class="fg"><label>Preguntas / Ítems</label>
+    <div class="list-ed" id="inicio-list">
+      <div class="li-row"><input type="text" value="¿Qué es una enfermedad viral?"><button class="btn-del" onclick="delItem(this)">×</button></div>
+      <div class="li-row"><input type="text" value="¿Se puede representar una enfermedad Matemáticamente? ¿Conoces algún modelo matemático?"><button class="btn-del" onclick="delItem(this)">×</button></div>
+      <div class="li-row"><input type="text" value="¿Qué es una función?"><button class="btn-del" onclick="delItem(this)">×</button></div>
+      <div class="li-row"><input type="text" value="Considera una población que cambia en el tiempo. ¿Cuál es la variable independiente y la dependiente?"><button class="btn-del" onclick="delItem(this)">×</button></div>
+      <div class="li-row"><input type="text" value="¿Cómo representar el cambio de una población respecto al tiempo?"><button class="btn-del" onclick="delItem(this)">×</button></div>
+    </div>
+    <button class="btn-add" onclick="addItem('inicio-list')">+ Agregar pregunta</button>
+  </div>
+
+  <div class="sec-nav">
+    <button class="btn-prev" onclick="goSec(1,null)">← Anterior</button>
+    <button class="btn-next" onclick="goSec(3,null)">Siguiente →</button>
+  </div>
+</div>
+
+<!-- 04 MOTIVACIÓN -->
+<div class="sec" id="s3">
+  <div class="sec-title">04 · Motivación — Modelo Matemático</div>
+  <div class="prog-bar"><div class="prog-fill" style="width:58%"></div></div>
+  <div class="info-box">
+    Define el modelo matemático que se trabajará en la guía: nombre, descripción general, ecuaciones y glosario de variables.
+    Si el campo de ecuaciones queda vacío, se insertará automáticamente una <strong>observación</strong> recomendando completar el modelo en Overleaf.
+  </div>
+
+  <div class="act-block">
+    <div class="act-block-hdr"><span class="badge b-mot">Presentación del modelo</span></div>
+    <div class="fg"><label>Nombre del modelo</label>
+      <input type="text" id="mot_nombre" placeholder="Modelo SIR (Susceptibles–Infectados–Recuperados)">
+    </div>
+    <div class="fg"><label>Descripción / Contexto del modelo</label>
+      <textarea id="mot_descripcion" style="min-height:80px" placeholder="El modelo SIR es un sistema de ecuaciones diferenciales ordinarias que describe la propagación de una enfermedad infecciosa en una población cerrada..."></textarea>
+    </div>
+  </div>
+
+  <div class="act-block">
+    <div class="act-block-hdr"><span class="badge b-mot">Ecuaciones del modelo</span></div>
+    <div class="fg">
+      <label>Ecuaciones LaTeX (una por línea — entornos equation, align, etc. o expresión suelta)</label>
+      <textarea id="mot_eqs" style="min-height:110px;font-family:'JetBrains Mono',monospace;font-size:11px"
+        placeholder="\frac{dS}{dt} = -\beta S I&#10;\frac{dI}{dt} = \beta S I - \gamma I&#10;\frac{dR}{dt} = \gamma I"></textarea>
+      <div style="font-size:10px;color:var(--gray-muted);margin-top:4px">
+        Puedes escribir <code>\begin{align}...\end{align}</code>, <code>\begin{cases}...\end{cases}</code>, expresiones sueltas, etc. Si se deja vacío, se generará una observación indicando completar en Overleaf.
+      </div>
+    </div>
+  </div>
+
+  <div class="act-block">
+    <div class="act-block-hdr"><span class="badge b-mot">Glosario de términos y variables</span></div>
+    <div class="fg"><label>Variables del modelo (nombre | descripción)</label>
+      <div class="list-ed" id="mot-vars-list">
+        <div class="li-row">
+          <input type="text" placeholder="S(t) | Número de susceptibles en el tiempo t" style="flex:1">
+          <button class="btn-del" onclick="delItem(this)">×</button>
+        </div>
+        <div class="li-row">
+          <input type="text" placeholder="I(t) | Número de infectados en el tiempo t" style="flex:1">
+          <button class="btn-del" onclick="delItem(this)">×</button>
+        </div>
+        <div class="li-row">
+          <input type="text" placeholder="R(t) | Número de recuperados en el tiempo t" style="flex:1">
+          <button class="btn-del" onclick="delItem(this)">×</button>
+        </div>
+        <div class="li-row">
+          <input type="text" placeholder="N | Tamaño total de la población (constante)" style="flex:1">
+          <button class="btn-del" onclick="delItem(this)">×</button>
+        </div>
+        <div class="li-row">
+          <input type="text" placeholder="\beta | Tasa de transmisión de la enfermedad" style="flex:1">
+          <button class="btn-del" onclick="delItem(this)">×</button>
+        </div>
+        <div class="li-row">
+          <input type="text" placeholder="\gamma | Tasa de recuperación" style="flex:1">
+          <button class="btn-del" onclick="delItem(this)">×</button>
+        </div>
+      </div>
+      <button class="btn-add" onclick="addItem('mot-vars-list')">+ Agregar variable</button>
+    </div>
+    <div class="fg"><label>Supuestos / Hipótesis del modelo (opcionales, uno por línea)</label>
+      <div class="list-ed" id="mot-supuestos-list">
+        <div class="li-row">
+          <input type="text" placeholder="La población total N es constante (sin nacimientos ni muertes)." style="flex:1">
+          <button class="btn-del" onclick="delItem(this)">×</button>
+        </div>
+        <div class="li-row">
+          <input type="text" placeholder="Los individuos recuperados adquieren inmunidad permanente." style="flex:1">
+          <button class="btn-del" onclick="delItem(this)">×</button>
+        </div>
+      </div>
+      <button class="btn-add" onclick="addItem('mot-supuestos-list')">+ Agregar supuesto</button>
+    </div>
+  </div>
+
+  <div class="sec-nav">
+    <button class="btn-prev" onclick="goSec(2,null)">← Anterior</button>
+    <button class="btn-next" onclick="goSec(4,null)">Siguiente →</button>
+  </div>
+</div>
+
+<!-- 05 DESARROLLO -->
+<div class="sec" id="s4">
+  <div class="sec-title">05 · Actividad de Desarrollo</div>
+  <div class="prog-bar"><div class="prog-fill" style="width:75%"></div></div>
+
+  <div class="act-block">
+    <div class="act-block-hdr"><span class="badge b-dev">Contexto del problema</span></div>
+    <div class="fg"><label>Título del problema</label>
+      <input type="text" id="prob_nombre" placeholder="Problema: Epidemia de la risa">
+    </div>
+    <div class="fg"><label>Enunciado</label>
+      <textarea id="prob_enunciado" style="min-height:80px" placeholder="En un pueblo de 500 habitantes, se propaga una curiosa enfermedad..."></textarea>
+    </div>
+    <div class="fg"><label>Ecuaciones / Modelo LaTeX (una por línea, sin \begin{equation}) - Es mejor dejarlo en blanco y completarlo luego en overleaf.</label>
+      <textarea id="prob_eqs" style="min-height:90px;font-family:'JetBrains Mono',monospace;font-size:11px" placeholder="S(t) = 490\left(1 + \frac{10}{490}\right)^{\frac{\beta}{\beta - \gamma}} \cdots&#10;I(t) = \cdots&#10;R(t) = 500 - S(t) - I(t)"></textarea>
+    </div>
+  </div>
+
+  <div class="act-block">
+    <div class="act-block-hdr"><span class="badge b-dev">Parte I — Análisis obligatorio (variables y gráficas)</span></div>
+    <div class="fg"><label>Título Parte I</label>
+      <input type="text" id="p1_titulo" placeholder="Análisis de las variables y gráficas">
+    </div>
+    <div class="fg"><label>Variables a describir (una por línea)</label>
+      <div class="list-ed" id="vars-list">
+        <div class="li-row"><input type="text" value="S(t)"><button class="btn-del" onclick="delItem(this)">×</button></div>
+        <div class="li-row"><input type="text" value="I(t)"><button class="btn-del" onclick="delItem(this)">×</button></div>
+        <div class="li-row"><input type="text" value="R(t)"><button class="btn-del" onclick="delItem(this)">×</button></div>
+        <div class="li-row"><input type="text" value="t"><button class="btn-del" onclick="delItem(this)">×</button></div>
+        <div class="li-row"><input type="text" value="\beta"><button class="btn-del" onclick="delItem(this)">×</button></div>
+        <div class="li-row"><input type="text" value="\gamma"><button class="btn-del" onclick="delItem(this)">×</button></div>
+      </div>
+      <button class="btn-add" onclick="addItem('vars-list')">+ Agregar variable</button>
+    </div>
+    <div class="row2">
+      <div class="fg"><label>¿Incluir cuadrícula tikz para bosquejo?</label>
+        <select id="p1_grid">
+          <option value="yes">Sí</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+      <div class="fg"><label>Dimensiones (ancho × alto)</label>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input type="text" id="grid_w" placeholder="30" style="width:70px">
+          <span style="color:var(--gray-muted)">×</span>
+          <input type="text" id="grid_h" placeholder="14" style="width:70px">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-block">
+    <div class="act-block-hdr"><span class="badge b-dev">Parte II — Análisis y reflexión</span></div>
+    <div class="fg"><label>Título Parte II</label>
+      <input type="text" id="p2_titulo" placeholder="Preguntas de análisis y de reflexión">
+    </div>
+    <div class="fg"><label>Preguntas de análisis</label>
+      <div class="list-ed" id="p2-list">
+        <div class="li-row"><input type="text" value="Analice el crecimiento de las funciones."><button class="btn-del" onclick="delItem(this)">×</button></div>
+        <div class="li-row"><input type="text" value="¿Cuáles son las poblaciones iniciales de cada función? (Con t=0)."><button class="btn-del" onclick="delItem(this)">×</button></div>
+        <div class="li-row"><input type="text" value="¿Existe algún punto crítico en la función? (Máximo o Mínimo)."><button class="btn-del" onclick="delItem(this)">×</button></div>
+        <div class="li-row"><input type="text" value="¿Qué ocurre con las poblaciones cuando transcurre mucho tiempo?"><button class="btn-del" onclick="delItem(this)">×</button></div>
+        <div class="li-row"><input type="text" value="¿Cómo se relacionan las tres funciones?"><button class="btn-del" onclick="delItem(this)">×</button></div>
+      </div>
+      <button class="btn-add" onclick="addItem('p2-list')">+ Agregar pregunta</button>
+    </div>
+    <div class="fg"><label>Enfoques opcionales</label>
+      <div class="enf-row">
+        <label class="enf-lbl"><input type="checkbox" id="enf_limite"> Límites</label>
+        <label class="enf-lbl"><input type="checkbox" id="enf_deriv"> Derivadas</label>
+        <label class="enf-lbl"><input type="checkbox" id="enf_int"> Integrales</label>
+        <label class="enf-lbl"><input type="checkbox" id="enf_otro"> Otro</label>
+      </div>
+      <input type="text" id="enf_otro_txt" style="margin-top:7px" placeholder="Especifica el enfoque opcional...">
+    </div>
+  </div>
+
+  <div class="sec-nav">
+    <button class="btn-prev" onclick="goSec(3,null)">← Anterior</button>
+    <button class="btn-next" onclick="goSec(5,null)">Siguiente →</button>
+  </div>
+</div>
+
+<!-- 06 CIERRE -->
+<div class="sec" id="s5">
+  <div class="sec-title">06 · Actividad de Cierre</div>
+  <div class="prog-bar"><div class="prog-fill" style="width:90%"></div></div>
+
+  <div class="fg"><label>Tipo de cierre</label>
+    <div class="cierre-grid">
+      <div class="cierre-opt sel" onclick="selCierre(this,'reflexion')">
+        <span class="co-ico">🪞</span>
+        <div class="co-lbl">Espacio de reflexión</div>
+        <div class="co-desc">Preguntas abiertas metacognitivas</div>
+      </div>
+      <div class="cierre-opt" onclick="selCierre(this,'ticket')">
+        <span class="co-ico">🎟</span>
+        <div class="co-lbl">Ticket de salida</div>
+        <div class="co-desc">3 preguntas breves de cierre</div>
+      </div>
+      <div class="cierre-opt" onclick="selCierre(this,'quiz')">
+        <span class="co-ico">📱</span>
+        <div class="co-lbl">Quiz digital</div>
+        <div class="co-desc">Kahoot / Mentimeter (con QR)</div>
+      </div>
+      <div class="cierre-opt" onclick="selCierre(this,'debate')">
+        <span class="co-ico">💬</span>
+        <div class="co-lbl">Debate / Mesa redonda</div>
+        <div class="co-desc">Discusión grupal guiada</div>
+      </div>
+    </div>
+    <input type="hidden" id="cierre_tipo" value="reflexion">
+  </div>
+  <div class="fg"><label>Título de la sección de cierre</label>
+    <input type="text" id="cierre_titulo" placeholder="Espacio de reflexión e interacción.">
+  </div>
+  <div class="fg"><label>Preguntas / ítems de cierre</label>
+    <div class="list-ed" id="cierre-list">
+      <div class="li-row"><input type="text" value="¿Se puede representar el comportamiento de una enfermedad Matemáticamente? ¿Con qué tipo de modelo?"><button class="btn-del" onclick="delItem(this)">×</button></div>
+      <div class="li-row"><input type="text" value="¿Qué limitaciones tiene el modelo abordado?"><button class="btn-del" onclick="delItem(this)">×</button></div>
+      <div class="li-row"><input type="text" value="¿Para qué sirve analizar la gráfica de una función?"><button class="btn-del" onclick="delItem(this)">×</button></div>
+      <div class="li-row"><input type="text" value="¿Qué fue lo más significativo que aprendiste hoy?"><button class="btn-del" onclick="delItem(this)">×</button></div>
+      <div class="li-row"><input type="text" value="¿Cómo fue su experiencia en este Espacio de Interacción Didáctica?"><button class="btn-del" onclick="delItem(this)">×</button></div>
+    </div>
+    <button class="btn-add" onclick="addItem('cierre-list')">+ Agregar pregunta</button>
+  </div>
+  <div class="fg"><label>URL Quiz digital (si aplica)</label>
+    <input type="text" id="cierre_url" placeholder="https://kahoot.it/...">
+  </div>
+
+  <div class="sec-nav">
+    <button class="btn-prev" onclick="goSec(4,null)">← Anterior</button>
+    <button class="btn-next" onclick="goSec(6,null)">Ver .tex →</button>
+  </div>
+</div>
+
+<!-- 07 EXPORTAR TEX -->
+<div class="sec" id="s6">
+  <div class="sec-title">{ } Código LaTeX — listo para Overleaf</div>
+  <div class="prog-bar"><div class="prog-fill" style="width:100%"></div></div>
+  <div class="info-box">Copia el código y pégalo en un nuevo proyecto de <strong>Overleaf</strong>. Sube también los archivos de imagen con los nombres indicados.</div>
+  <div class="tex-wrap">
+    <div class="tex-bar">
+      <div class="tex-dots"><div class="td td1"></div><div class="td td2"></div><div class="td td3"></div></div>
+      <span id="tex-filename">guia_trabajo.tex</span>
+      <button class="btn-copy" onclick="copyTex()">📋 Copiar código</button>
+    </div>
+    <pre class="tex-code" id="tex-preview">← Rellena las secciones anteriores y vuelve aquí para ver el .tex generado.</pre>
+  </div>
+  <div class="sec-nav">
+    <button class="btn-prev" onclick="goSec(5,null)">← Anterior</button>
+    <button class="btn-next" onclick="exportTex()">⬇ Descargar .tex</button>
+  </div>
+</div>
+
+</main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const logos=[null,null,null];
+
+function handleLogo(i,e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    logos[i]=ev.target.result;
+    const z=document.getElementById('lz'+i);
+    z.classList.add('has-img');
+    const fi=z.querySelector('input[type=file]');
+    z.innerHTML='';
+    z.appendChild(fi);
+    const img=document.createElement('img');img.src=ev.target.result;z.appendChild(img);
+    const clr=document.createElement('button');clr.className='logo-clr';clr.textContent='×';
+    clr.onclick=ev2=>{
+      ev2.stopPropagation();logos[i]=null;
+      z.classList.remove('has-img');
+      z.innerHTML='<input type="file" accept="image/*" onchange="handleLogo('+i+',event)"><span style="font-size:22px">🖼</span><span class="logo-lbl">Click para subir</span><span class="logo-sub">PNG / JPG / SVG</span>';
+    };
+    z.appendChild(clr);
+  };
+  r.readAsDataURL(f);
+}
+
+let curSec=0;
+const secs=document.querySelectorAll('.sec');
+const navBtns=document.querySelectorAll('.nav-item');
+function goSec(i,btn){
+  secs.forEach(s=>s.classList.remove('active'));
+  navBtns.forEach(b=>b.classList.remove('active'));
+  secs[i].classList.add('active');
+  if(btn)btn.classList.add('active');
+  else navBtns[i].classList.add('active');
+  curSec=i;
+  if(i===6)renderTex();
+}
+
+function selTipo(btn,tipo){
+  document.querySelectorAll('.tipo-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  document.getElementById('tipo_inicio').value=tipo;
+  const tit=document.getElementById('inicio_titulo');
+  if(!tit.value){
+    const m={lluvia:'Lluvia de Ideas',debate:'Debate inicial',caso:'Estudio de caso',juego:'Juego / Ruleta de preguntas',otro:'Actividad inicial'};
+    tit.value=m[tipo]||'';
+  }
+}
+function selCierre(el,tipo){
+  document.querySelectorAll('.cierre-opt').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('cierre_tipo').value=tipo;
+}
+function delItem(btn){btn.parentElement.remove();}
+function addItem(listId){
+  const d=document.getElementById(listId);
+  const row=document.createElement('div');row.className='li-row';
+  row.innerHTML='<input type="text"><button class="btn-del" onclick="delItem(this)">×</button>';
+  d.appendChild(row);row.querySelector('input').focus();
+}
+function getList(listId){
+  return Array.from(document.querySelectorAll('#'+listId+' .li-row input')).map(i=>i.value.trim()).filter(Boolean);
+}
+function v(id){const el=document.getElementById(id);return el?el.value.trim():'';}
+
+function buildTex(){
+  const logo0=v('logo0name')||'logo1.png';
+  const logo1=v('logo1name')||'logo2.png';
+  const logo2=v('logo2name')||'logo3.png';
+  const titulo=v('titulo')||'Título de la Guía';
+  const equipo=v('equipo')||'Equipo de Docencia';
+  const evento=v('evento')||'Nombre del Evento';
+  const evento_sub=v('evento_sub')||'';
+  const facultad=v('facultad')||'Facultad';
+  const univ=v('universidad')||'Universidad';
+  const anio=v('anio')||'2025';
+  const lhead=v('lhead')||univ;
+  const rhead=v('rhead')||'Espacio de Interacción Didáctica';
+  const obj=v('obj_sesion')||'Objetivo de la sesión.';
+  const agenda=getList('agenda-list');
+  const urlQR=v('url_qr')||'https://example.com';
+  const logoQR=v('logo_qr')||'logo_qr.png';
+  const qrLabel=v('qr_label')||'Guía interactiva en línea';
+  const iTitle=v('inicio_titulo')||'Actividad Inicial';
+  const iItems=getList('inicio-list');
+  // MOTIVACIÓN
+  const motNombre=v('mot_nombre')||'';
+  const motDesc=v('mot_descripcion')||'';
+  const motEqs=v('mot_eqs')||'';
+  const motVars=getList('mot-vars-list');
+  const motSupuestos=getList('mot-supuestos-list');
+  const probNombre=v('prob_nombre')||'Problema';
+  const probEnun=v('prob_enunciado')||'';
+  const probEqs=v('prob_eqs')||'';
+  const p1t=v('p1_titulo')||'Análisis de las variables y gráficas';
+  const vars=getList('vars-list');
+  const gridYes=v('p1_grid')==='yes';
+  const gw=v('grid_w')||'30';const gh=v('grid_h')||'14';
+  const p2t=v('p2_titulo')||'Preguntas de análisis y de reflexión';
+  const p2q=getList('p2-list');
+  const cTitle=v('cierre_titulo')||'Espacio de reflexión e interacción.';
+  const cItems=getList('cierre-list');
+  const cUrl=v('cierre_url')||'';
+
+  const enfOps=[];
+  if(document.getElementById('enf_limite').checked)enfOps.push('límites');
+  if(document.getElementById('enf_deriv').checked)enfOps.push('derivadas');
+  if(document.getElementById('enf_int').checked)enfOps.push('integrales');
+  if(document.getElementById('enf_otro').checked){const t=v('enf_otro_txt');if(t)enfOps.push(t);}
+
+  let eqs='';
+  if(probEqs.trim()){
+    eqs=probEqs.trim().split('\n').filter(Boolean).map(eq=>'\\begin{equation*}\n'+eq.trim()+'\n\\end{equation*}').join('\n%\n');
+  }
+
+  // Motivación — modelo matemático LaTeX
+  let motEqsTex='';
+  if(motEqs.trim()){
+    const lines=motEqs.trim().split('\n').filter(Boolean);
+    // Detect if user already wrote a LaTeX environment
+    const hasEnv=/\\begin\{/.test(motEqs);
+    if(hasEnv){
+      motEqsTex=lines.join('\n');
+    } else {
+      motEqsTex=lines.map(eq=>'\\begin{equation}\n'+eq.trim()+'\n\\end{equation}').join('\n');
+    }
+  } else {
+    motEqsTex='\\begin{observacion}\nSe recomienda escribir el modelo matemático en \\textbf{Overleaf} utilizando los entornos \\texttt{equation}, \\texttt{align} o \\texttt{cases} según corresponda.\n\\end{observacion}';
+  }
+  const motVarItems=motVars.map(vr=>{
+    const parts=vr.split('|');
+    const nm=(parts[0]||vr).trim();
+    const desc=(parts[1]||'').trim();
+    return desc?'  \\item[$'+nm+'$:] '+desc:'  \\item[$'+nm+'$:]';
+  }).join('\n');
+  const motSupItems=motSupuestos.map(s=>'  \\item '+s).join('\n');
+  const varItems=vars.map(vr=>'    \\item [] $'+vr+':$').join('\n');
+  let gridCode='';
+  if(gridYes){gridCode='\\noindent \\circlednum{2} Haz un bosquejo de las funciones.\n\\\\[0.2em]\n\\begin{tikzpicture}[scale=0.5]\n  \\draw[very thin, black!30] (0,0) grid ('+gw+','+gh+');\n\\end{tikzpicture}\n\\\\[0.2em]';}
+  const p2items=p2q.map((q,i)=>'\\item[\\circlednum{'+(i+1)+'}] '+q+'\n    \\vspace{1cm}').join('\n    %%%%\n    ');
+  const cItemsCode=cItems.map((q,i)=>'    \\item['+(i+1)+'.] '+q+'\n    \\vspace{2cm}').join('\n');
+  const agendaItems=agenda.map(a=>'    \\item '+a).join('\n');
+  let cierreQR='';
+  if(cUrl){cierreQR='\n\n\\vspace{0.5em}\n\\begin{center}\n\\fbox{\\qrcode[height=2cm]{'+cUrl+'}}\n\\\\\\small Recurso digital\n\\end{center}';}
+  let enfBlock='';
+  if(enfOps.length>0){enfBlock='\n\n% Enfoques opcionales: '+enfOps.join(', ')+'\n% (Agregar preguntas adicionales según corresponda)';}
+  let eventoSubLine=evento_sub?'\n\t\\textit{'+evento_sub+'}\\\\[0.5em]':'\\\\[0.5em]';
+
+  return `\\documentclass[11pt]{article}
+\\usepackage[utf8]{inputenc}
+\\usepackage[T1]{fontenc}
+\\usepackage{amsmath,amssymb}
+\\usepackage{graphicx}
+\\usepackage{fancyhdr}
+\\usepackage{geometry}
+\\usepackage{enumitem}
+\\usepackage{xcolor}
+\\usepackage{multicol}
+\\usepackage{tcolorbox}
+\\usepackage{titlesec}
+\\usepackage{tikz}
+\\usetikzlibrary{positioning}
+\\usepackage{ulem}
+\\usepackage[spanish]{babel}
+\\usepackage{lmodern}
+\\usepackage{pgfplots}
+\\usepackage{wrapfig}
+\\usepackage{float}
+\\pgfplotsset{compat=1.17}
+\\usepackage{microtype}
+\\usepackage{fontawesome}
+\\usepackage{qrcode}
+\\usepackage{hyperref}
+
+\\definecolor{actcolor}{RGB}{252,252,254}
+\\definecolor{actframe}{RGB}{60,100,160}
+\\definecolor{UBBblue}{RGB}{0,53,90}
+\\definecolor{softgray}{RGB}{245,245,245}
+\\definecolor{obscolor}{RGB}{255,249,196}
+
+\\newcounter{actividadctr}
+\\setcounter{actividadctr}{0}
+
+\\newtcolorbox{bloque}[1]{
+  breakable, colback=actcolor, colframe=actframe,
+  fonttitle=\\bfseries, title={#1}, sharp corners, boxrule=0.8pt
+}
+
+\\tcbuselibrary{breakable, skins}
+
+\\newtcolorbox{definicion}[1][]{
+  breakable, colback=actcolor, colframe=actframe,
+  title={\\textbf{Definición}}, fonttitle=\\bfseries,
+  sharp corners, boxrule=0.8pt, #1
+}
+
+\\newtcolorbox{observacion}[1][]{
+  breakable, colback=obscolor, colframe=orange!80!black,
+  title={\\textbf{Observación}}, fonttitle=\\bfseries,
+  sharp corners, boxrule=0.8pt, #1
+}
+
+\\geometry{letterpaper, margin=2.5cm}
+\\pagestyle{fancy}
+\\fancyhf{}
+\\rhead{\\small ${rhead}}
+\\lhead{\\small ${lhead}}
+\\cfoot{\\thepage}
+
+\\newcommand{\\circlednum}[1]{%
+  \\tikz[baseline=(char.base)]\\node[draw,circle,inner sep=0.8pt,minimum size=1em,
+  line width=0.3pt](char){\\sffamily\\bfseries #1};%
+}
+
+% ============================================================
+\\begin{document}
+
+% 01 — PORTADA INSTITUCIONAL
+\\begin{center}
+  \\begin{minipage}{0.35\\textwidth}
+    \\centering
+    \\includegraphics[width=0.45\\textwidth]{${logo0}}
+  \\end{minipage}
+  \\hfill
+  \\begin{minipage}{0.3\\textwidth}
+    \\centering
+    \\includegraphics[width=0.45\\textwidth]{${logo1}}
+  \\end{minipage}
+  \\hfill
+  \\begin{minipage}{0.32\\textwidth}
+    \\centering
+    \\includegraphics[width=0.45\\textwidth]{${logo2}}
+  \\end{minipage}
+\\end{center}
+
+\\vspace{0.3cm}
+\\rule{\\textwidth}{0.4pt}
+\\vspace{0.1cm}
+\\begin{center}
+  {\\Huge \\textbf{${titulo}}}\\\\[0.8em]
+  \\text{${equipo}}\\\\[0.2em]
+  \\textit{${evento}}\\\\[0.2em]${eventoSubLine}
+  \\textbf{${facultad}}\\\\
+  \\textbf{${univ} -- Año ${anio}}
+\\end{center}
+\\rule{\\textwidth}{0.4pt}
+
+% 02 — DATOS GENERALES DE LA SESIÓN
+\\begin{tcolorbox}[
+  title = Datos,
+  colback=gray!5!white,
+  colframe=black!90!white
+]
+Nombre Completo: \\rule{8cm}{0.4pt} Fecha: \\rule{3cm}{0.4pt}\\\\[0.5em]
+Institución: \\rule{9cm}{0.4pt} Curso: \\rule{3cm}{0.4pt}\\\\[1em]
+
+\\textbf{Objetivo de la sesión}
+
+${obj}
+
+\\vspace{0.5em}
+
+\\rule{0.75\\textwidth}{0.4pt}
+
+{\\centering \\textbf{Agenda del día}\\par}
+
+\\rule{0.75\\textwidth}{0.4pt}
+
+\\vspace{0.8em}
+
+\\begin{minipage}[c]{0.72\\textwidth}
+En esta sesión de clase se realizarán las siguientes actividades:
+\\begin{enumerate}
+${agendaItems}
+\\end{enumerate}
+\\end{minipage}
+\\hfill
+\\begin{minipage}[c]{0.24\\textwidth}
+\\centering
+\\fbox{
+\\begin{tikzpicture}
+\\node[inner sep=0] (qr)
+{
+  \\color[HTML]{1F3554}
+  \\qrcode[height=3.5cm]{${urlQR}}
+};
+\\node at (qr.center)
+{
+  \\includegraphics[width=1.5cm]{${logoQR}}
+};
+\\node[below=3pt of qr,align=center]
+{
+  \\scriptsize ${qrLabel}
+};
+\\end{tikzpicture}
+}
+\\end{minipage}
+\\end{tcolorbox}
+
+\\newpage
+
+% 03 — ACTIVIDAD INICIAL
+\\section*{${iTitle}}
+
+\\begin{itemize}
+${iItems.map((q,i)=>'    \\item['+(i+1)+'.] '+q+'\n    \\vspace{2cm}').join('\n')}
+\\end{itemize}
+
+\\clearpage
+
+% 04 — MOTIVACIÓN: MODELO MATEMÁTICO
+${motNombre?`\\section*{${motNombre}}`:'\\section*{Motivación — Modelo Matemático}'}
+
+${motDesc?`\\noindent\n${motDesc}\n`:''}
+
+${motEqsTex}
+
+${motVarItems?`\\vspace{0.5em}
+\\begin{tcolorbox}[title=Glosario de variables, colback=gray!5!white, colframe=black!90!white]
+\\begin{description}
+${motVarItems}
+\\end{description}
+\\end{tcolorbox}`:''}
+
+${motSupItems?`\\vspace{0.3em}
+\\begin{tcolorbox}[title=Supuestos del modelo, colback=actcolor, colframe=actframe]
+\\begin{itemize}
+${motSupItems}
+\\end{itemize}
+\\end{tcolorbox}`:''}
+
+\\clearpage
+
+% 05 — ACTIVIDAD DE DESARROLLO
+\\section*{${probNombre}}
+
+\\noindent
+${probEnun}
+
+${eqs}
+${enfBlock}
+
+\\begin{tcolorbox}[title=Parte I: ${p1t}, colback=gray!5!white, colframe=black!90!white]
+\\begin{enumerate}[leftmargin=*]
+\\item[]
+\\begin{minipage}[t]{0.8\\linewidth}
+\\vspace{0pt}
+\\noindent \\circlednum{1} Respecto a las funciones, describa las siguientes variables.
+
+\\begin{itemize}
+${varItems}
+\\end{itemize}
+
+${gridCode}
+\\end{minipage}
+\\end{enumerate}
+\\end{tcolorbox}
+
+\\clearpage
+
+\\begin{tcolorbox}[title = Parte II: ${p2t}, colback=gray!5!white, colframe=black!90!white]
+\\begin{description}
+    ${p2items}
+\\end{description}
+\\end{tcolorbox}
+
+\\clearpage
+
+% 05 — ACTIVIDAD DE CIERRE
+\\section*{${cTitle}}
+${cierreQR}
+\\begin{itemize}
+${cItemsCode}
+\\end{itemize}
+
+\\end{document}`;
+}
+
+function renderTex(){
+  const code=buildTex();
+  document.getElementById('tex-preview').textContent=code;
+  const tit=(v('titulo')||'guia_trabajo').replace(/[^a-z0-9]/gi,'_').toLowerCase();
+  document.getElementById('tex-filename').textContent=tit+'.tex';
+}
+
+function copyTex(){
+  const code=document.getElementById('tex-preview').textContent||buildTex();
+  navigator.clipboard.writeText(code).then(()=>showToast('Código .tex copiado ✓')).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('Copiado ✓');
+  });
+}
+
+function exportTex(){
+  const code=buildTex();
+  const tit=(v('titulo')||'guia_trabajo').replace(/[^a-z0-9]/gi,'_').toLowerCase();
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([code],{type:'text/plain;charset=utf-8'}));
+  a.download=tit+'.tex';a.click();
+  showToast('.tex descargado ✓');
+}
+
+function exportHTML(){
+  const titulo=v('titulo')||'Guía de Trabajo';
+  const equipo=v('equipo')||'';
+  const evento=v('evento')||'';
+  const evento_sub=v('evento_sub')||'';
+  const obj=v('obj_sesion')||'';
+  const agenda=getList('agenda-list');
+  const iTitle=v('inicio_titulo')||'Actividad Inicial';
+  const iItems=getList('inicio-list');
+  // MOTIVACIÓN
+  const motNombre=v('mot_nombre')||'Motivación — Modelo Matemático';
+  const motDesc=v('mot_descripcion')||'';
+  const motEqsRaw=v('mot_eqs')||'';
+  const motVarsH=getList('mot-vars-list');
+  const motSupH=getList('mot-supuestos-list');
+  const probNombre=v('prob_nombre')||'Problema';
+  const probEnun=v('prob_enunciado')||'';
+  const probEqs=v('prob_eqs')||'';
+  const p1t=v('p1_titulo')||'Parte I';
+  const vars=getList('vars-list');
+  const gridYes=v('p1_grid')==='yes';
+  const p2t=v('p2_titulo')||'Parte II';
+  const p2q=getList('p2-list');
+  const cTitle=v('cierre_titulo')||'Cierre';
+  const cItems=getList('cierre-list');
+  const urlQR=v('url_qr')||'';
+  const qrLabel=v('qr_label')||'Guía interactiva en línea';
+
+  // logos as base64 if uploaded
+  const l0=logos[0]?`<img src="${logos[0]}" style="max-height:60px;max-width:100%;object-fit:contain" alt="Logo 1">`:'';
+  const l1=logos[1]?`<img src="${logos[1]}" style="max-height:60px;max-width:100%;object-fit:contain" alt="Logo 2">`:'';
+  const l2=logos[2]?`<img src="${logos[2]}" style="max-height:60px;max-width:100%;object-fit:contain" alt="Logo 3">`:'';
+
+  let eqsHtml='';
+  if(probEqs.trim()){
+    eqsHtml=probEqs.trim().split('\n').filter(Boolean).map(eq=>`<div class="eq">\\[${eq.trim()}\\]</div>`).join('');
+  }
+
+  // Motivación HTML
+  let motEqsHtml='';
+  if(motEqsRaw.trim()){
+    const lines=motEqsRaw.trim().split('\n').filter(Boolean);
+    const hasEnv=/\\begin\{/.test(motEqsRaw);
+    if(hasEnv){
+      motEqsHtml=`<div class="eq">\\[${lines.join('\n')}\\]</div>`;
+    } else {
+      motEqsHtml=lines.map(eq=>`<div class="eq">\\[${eq.trim()}\\]</div>`).join('');
+    }
+  } else {
+    motEqsHtml=`<div class="obs-box">⚠️ <strong>Observación:</strong> Se recomienda escribir el modelo matemático en <strong><a href="https://www.overleaf.com" target="_blank">Overleaf</a></strong> utilizando los entornos <code>equation</code>, <code>align</code> o <code>cases</code> según corresponda.</div>`;
+  }
+  const motVarsHtml=motVarsH.map(vr=>{
+    const parts=vr.split('|');
+    const nm=(parts[0]||vr).trim();
+    const desc=(parts[1]||'').trim();
+    return `<div class="var-row"><span class="var-name">\\(${nm}\\)</span><span class="var-line"></span><span style="font-size:12px;color:#4a5068;margin-left:8px">${desc}</span></div>`;
+  }).join('');
+  const motSupHtml=motSupH.map(s=>`<li style="font-size:13px">${s}</li>`).join('');
+
+  const varsHtml=vars.map(vr=>`<div class="var-row"><span class="var-name">\\(${vr}\\)</span><span class="var-line"></span></div>`).join('');
+
+  const p2Html=p2q.map((q,i)=>`
+    <div class="q-item">
+      <div class="q-hdr"><span class="q-num">${i+1}</span><span>${q}</span></div>
+      <div class="q-space"></div>
+    </div>`).join('');
+
+  const qrSection=urlQR?`
+    <div class="qr-box">
+      <a href="${urlQR}" target="_blank" class="qr-link">🔗 ${qrLabel}</a>
+    </div>`:'';
+
+  const gridHtml=gridYes?`<div class="grid-placeholder">[ Espacio para bosquejo de gráficas ]</div>`:'';
+
+  const html=`<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${titulo}</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+MathJax={tex:{inlineMath:[['\\\\(','\\\\)']],displayMath:[['\\\\[','\\\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};
+<\/script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.min.js"><\/script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',sans-serif;font-size:14px;color:#1a1d2e;max-width:820px;margin:0 auto;padding:2rem 2.5rem;background:#fff;line-height:1.75}
+.logos-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:1rem}
+.logos-row>div{flex:1;display:flex;justify-content:center}
+hr.rule{border:none;border-top:1.5px solid #1a1d2e;margin:.6rem 0}
+.portada-title{text-align:center;margin:.8rem 0}
+.portada-title h1{font-family:'Source Serif 4',serif;font-size:2rem;font-weight:600;line-height:1.2;margin-bottom:.6rem}
+.portada-title .autores{font-size:13px;margin-bottom:.3rem}
+.portada-title .evento{font-style:italic;font-size:13px;margin-bottom:.3rem}
+.portada-title .inst{font-weight:600;font-size:13px;margin-top:.4rem}
+.datos-box{border:1.5px solid #1a1d2e;border-radius:6px;padding:1.3rem 1.5rem;margin:1.5rem 0}
+.datos-box .box-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:#666;margin-bottom:.9rem}
+.field-line{border-bottom:1px solid #aaa;margin-bottom:.7rem;padding-bottom:2px;color:#555;font-size:13px}
+.obj-lbl{font-weight:600;margin:1rem 0 .3rem;font-size:13px}
+.agenda-hdr{text-align:center;font-weight:600;font-size:13px;border-top:1px solid #ccc;border-bottom:1px solid #ccc;padding:.35rem;margin:.8rem 0}
+.agenda-grid{display:flex;gap:1.5rem;align-items:flex-start;margin-top:.5rem}
+.agenda-list{flex:1}
+.agenda-list ol{margin-left:1.3rem;font-size:13px}
+.agenda-list ol li{margin-bottom:.25rem}
+.qr-box{text-align:center;margin-top:.5rem}
+.qr-link{display:inline-block;background:#003B75;color:#fff;padding:.4rem .9rem;border-radius:4px;font-size:12px;text-decoration:none;font-weight:500}
+.sec-title{font-family:'Source Serif 4',serif;font-size:1.2rem;font-weight:600;color:#003B75;border-bottom:2px solid #003B75;padding-bottom:.3rem;margin:2.2rem 0 1rem}
+.pregunta-open{margin-bottom:1.4rem}
+.pregunta-open .num{font-weight:600;font-size:13px;margin-bottom:.4rem}
+.espacio{height:55px;border-bottom:1px dashed #bbb;margin-bottom:.4rem}
+.tbox{border:1.5px solid #444;border-radius:6px;padding:1.2rem 1.4rem;margin:1.5rem 0;background:#fafafa}
+.tbox-hdr{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#003B75;border-bottom:1px solid #dde3ee;padding-bottom:.4rem;margin-bottom:.9rem}
+.var-row{display:flex;align-items:flex-end;gap:.5rem;margin-bottom:.5rem;font-size:13px}
+.var-name{min-width:60px;font-weight:500}
+.var-line{flex:1;border-bottom:1px dotted #bbb;height:1em}
+.grid-placeholder{border:1px solid #ccc;background:#f8f8f8;height:180px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:12px;border-radius:4px;margin:1rem 0;font-style:italic}
+.obs-box{background:#fff8e1;border-left:4px solid #f59e0b;border-radius:0 6px 6px 0;padding:.8rem 1.1rem;font-size:13px;color:#7c5300;margin:1rem 0;line-height:1.6}
+.obs-box a{color:#003B75}
+.q-item{margin-bottom:1.3rem}
+.q-hdr{display:flex;align-items:flex-start;gap:.5rem;font-size:13px;margin-bottom:.4rem}
+.q-num{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border:1.5px solid #003B75;border-radius:50%;font-size:11px;font-weight:700;color:#003B75;flex-shrink:0;margin-top:1px}
+.q-space{height:50px;border-bottom:1px dashed #bbb}
+.cierre-item{margin-bottom:1.4rem}
+.cierre-item .ci-num{font-weight:600;margin-bottom:.3rem;font-size:13px}
+.eq{margin:.6rem 0;overflow-x:auto}
+footer{margin-top:3rem;border-top:1px solid #eee;padding-top:1rem;font-size:10px;color:#aaa;text-align:center}
+@media print{
+  body{padding:1rem}
+  .no-print{display:none}
+  .sec-title{page-break-before:always}
+}
+</style>
+</head>
+<body>
+
+<!-- PORTADA -->
+<div class="logos-row">
+  <div>${l0}</div>
+  <div>${l1}</div>
+  <div>${l2}</div>
+</div>
+<hr class="rule">
+<div class="portada-title">
+  <h1>${titulo}</h1>
+  <div class="autores">${equipo}</div>
+  <div class="evento">${evento}</div>
+  ${evento_sub?`<div class="evento">${evento_sub}</div>`:''}
+  <div class="inst">${v('facultad')||''}<br>${v('universidad')||''} — ${v('anio')||''}</div>
+</div>
+<hr class="rule">
+
+<!-- DATOS SESIÓN -->
+<div class="datos-box">
+  <div class="box-title">Datos del participante</div>
+  <div class="field-line">Nombre Completo: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Fecha:</div>
+  <div class="field-line">Institución: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Curso:</div>
+  <div class="obj-lbl">Objetivo de la sesión</div>
+  <div style="font-size:13px">${obj}</div>
+  <div class="agenda-hdr">Agenda del día</div>
+  <div class="agenda-grid">
+    <div class="agenda-list">
+      <p style="font-size:13px;margin-bottom:.4rem">En esta sesión de clase se realizarán las siguientes actividades:</p>
+      <ol>${agenda.map(a=>`<li>${a}</li>`).join('')}</ol>
+    </div>
+    ${qrSection}
+  </div>
+</div>
+
+<!-- ACTIVIDAD INICIAL -->
+<div class="sec-title">${iTitle}</div>
+${iItems.map((q,i)=>`<div class="pregunta-open"><div class="num">${i+1}. ${q}</div><div class="espacio"></div></div>`).join('')}
+
+<!-- MOTIVACIÓN -->
+<div class="sec-title">${motNombre}</div>
+${motDesc?`<p style="font-size:13px;margin-bottom:.9rem">${motDesc}</p>`:''}
+${motEqsHtml}
+${motVarsHtml?`<div class="tbox" style="margin-top:1rem"><div class="tbox-hdr">Glosario de variables</div>${motVarsHtml}</div>`:''}
+${motSupHtml?`<div class="tbox" style="margin-top:1rem"><div class="tbox-hdr">Supuestos del modelo</div><ul style="margin-left:1.2rem;margin-top:.4rem">${motSupHtml}</ul></div>`:''}
+
+<!-- DESARROLLO -->
+<div class="sec-title">${probNombre}</div>
+<p style="font-size:13px;margin-bottom:.8rem">${probEnun}</p>
+${eqsHtml}
+
+<div class="tbox">
+  <div class="tbox-hdr">Parte I — ${p1t}</div>
+  <p style="font-size:13px;margin-bottom:.7rem"><strong>① Respecto a las funciones, describa las siguientes variables:</strong></p>
+  ${varsHtml}
+  ${gridHtml}
+</div>
+
+<div class="tbox" style="margin-top:1.5rem">
+  <div class="tbox-hdr">Parte II — ${p2t}</div>
+  ${p2Html}
+</div>
+
+<!-- CIERRE -->
+<div class="sec-title">${cTitle}</div>
+${cItems.map((q,i)=>`<div class="cierre-item"><div class="ci-num">${i+1}. ${q}</div><div class="espacio"></div></div>`).join('')}
+
+<footer>Guía generada con el Generador de Guías · ${titulo} · ${v('anio')||new Date().getFullYear()}</footer>
+</body>
+</html>`;
+
+  const tit=(v('titulo')||'guia').replace(/[^a-z0-9]/gi,'_').toLowerCase();
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+  a.download=tit+'_guia.html';
+  a.click();
+  showToast('Guía HTML descargada ✓');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+</body>
+</html>
